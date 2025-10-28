@@ -31,8 +31,5 @@
     "tailwindcss": "^4.1.15",
     "typescript": "^5"
   },
-  "overrides": {
-    "react-simple-maps/react": "$react",
-    "react-simple-maps/react-dom": "$react-dom"
-  }
+  "overrides": {}
 }

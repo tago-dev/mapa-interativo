@@ -4,10 +4,24 @@ import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import PainelCidade from "./PainelCidade";
 import geoData from "../data/municipios.json";
 
-export default function MapaBrasil() {
-    const [cidadeSelecionada, setCidadeSelecionada] = useState<any>(null);
+// Tipos mínimos para evitar uso de `any` e agradar o ESLint
+type GeoFeatureProps = {
+    name: string;
+    mesorregiao?: string;
+};
+type GeoFeature = {
+    rsmKey?: string;
+    properties: GeoFeatureProps;
+};
+type CidadeSelecionada = {
+    nome: string;
+    mesorregiao?: string;
+} | null;
 
-    const handleClick = (geo: any) => {
+export default function MapaBrasil() {
+    const [cidadeSelecionada, setCidadeSelecionada] = useState<CidadeSelecionada>(null);
+
+    const handleClick = (geo: GeoFeature) => {
         const { name, mesorregiao } = geo.properties;
         setCidadeSelecionada({ nome: name, mesorregiao });
     };
@@ -22,12 +36,12 @@ export default function MapaBrasil() {
                     width={800}
                     height={600}
                 >
-                    <Geographies geography={geoData as any}>
-                        {({ geographies }: any) =>
-                            (geographies as any[]).map((geo: any) => (
+                    <Geographies geography={geoData as unknown}>
+                        {({ geographies }: { geographies: GeoFeature[] }) =>
+                            geographies.map((geo) => (
                                 <Geography
                                     key={geo.rsmKey}
-                                    geography={geo}
+                                    geography={geo as unknown as Record<string, unknown>}
                                     onClick={() => handleClick(geo)}
                                     stroke="#999"
                                     strokeWidth={0.5}
