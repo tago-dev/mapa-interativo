@@ -1,6 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// Cliente para componentes client-side que sincroniza sessão via cookies,
+// compatível com o middleware e rotas protegidas
+export const supabase = createClientComponentClient();
