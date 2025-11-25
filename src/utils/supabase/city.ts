@@ -31,11 +31,22 @@ export async function fetchCityData(id: string): Promise<CidadeCompleta | null> 
     };
 }
 
-export async function updateCityData(id: string, data: Partial<Cidade>) {
+export async function fetchAllCities(): Promise<Cidade[]> {
+    const { data, error } = await supabase
+        .from('cidades')
+        .select('*');
+
+    if (error) {
+        console.error('Erro ao buscar cidades:', error);
+        return [];
+    }
+    return data || [];
+}
+
+export async function upsertCityData(data: Partial<Cidade>) {
     const { error } = await supabase
         .from('cidades')
-        .update(data)
-        .eq('id', id);
+        .upsert(data, { onConflict: 'id' });
 
     if (error) throw error;
 }
