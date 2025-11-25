@@ -46,27 +46,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Features Section */}
-      <section id="recursos" className="py-20 bg-gray-800/50 px-4">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
-          <FeatureCard
-            title="Visualização Geográfica"
-            description="Navegue por um mapa interativo detalhado de todos os municípios brasileiros com renderização otimizada."
-            icon="🗺️"
-          />
-          <FeatureCard
-            title="Dados Políticos"
-            description="Acesse informações sobre prefeitos, partidos e bases de apoio em cada cidade com um clique."
-            icon="📊"
-          />
-          <FeatureCard
-            title="Análise Regional"
-            description="Filtre por mesorregiões e estados para entender o cenário político de forma macro e micro."
-            icon="🔍"
-          />
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="py-8 text-center text-gray-500 text-sm border-t border-gray-800">
         © {new Date().getFullYear()} Mapa Interativo. Todos os direitos reservados.
