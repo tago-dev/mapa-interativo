@@ -1,71 +1,105 @@
 "use client";
-import { useState } from "react";
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import PainelCidade from "./PainelCidade";
-import geoData from "../data/municipios.json";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
-// Tipos mínimos para evitar uso de `any` e agradar o ESLint
+// Tipos para as propriedades do GeoJSON
 type GeoFeatureProps = {
     name: string;
     mesorregiao?: string;
+    prefeito?: string;
+    partido?: string;
+    apoio?: number;
+    nao_apoio?: number;
+    vereadores?: Array<{ nome: string; partido: string }>;
 };
+
 type GeoFeature = {
+    id?: string;
     rsmKey?: string;
     properties: GeoFeatureProps;
 };
-type CidadeSelecionada = {
-    nome: string;
-    mesorregiao?: string;
-} | null;
 
 export default function MapaBrasil() {
-    const [cidadeSelecionada, setCidadeSelecionada] = useState<CidadeSelecionada>(null);
+    const router = useRouter();
+    const [geoData, setGeoData] = useState<any>(null);
+
+    useEffect(() => {
+        console.log("Iniciando fetch dos dados...");
+        fetch("/data/municipios.json")
+            .then((res) => {
+                console.log("Resposta do fetch:", res.status);
+                if (!res.ok) throw new Error("Falha ao carregar dados");
+                return res.json();
+            })
+            .then((data) => {
+                console.log("Dados carregados:", data);
+                setGeoData(data);
+            })
+            .catch((err) => console.error("Erro ao carregar dados do mapa:", err));
+    }, []);
 
     const handleClick = (geo: GeoFeature) => {
-        const { name, mesorregiao } = geo.properties;
-        setCidadeSelecionada({ nome: name, mesorregiao });
+        // Prioriza o ID (pode estar na raiz ou em properties), senão usa o nome
+        // O GeoJSON do tbrugz tem o id dentro de properties
+        const id = geo.id || (geo.properties as any).id || geo.properties.name;
+        if (id) {
+            router.push(`/app/cidade/${encodeURIComponent(id)}`);
+        }
     };
 
+    if (!geoData) {
+        return (
+            <div className="flex items-center justify-center h-full w-full bg-gray-100 text-gray-500">
+                Carregando mapa...
+            </div>
+        );
+    }
+
     return (
-        <div className="flex w-full h-screen">
-            <div className="w-2/3 bg-white">
+        <div className="flex h-full w-full bg-gray-100 overflow-hidden">
+            <div className="w-full h-full relative bg-blue-50">
                 <ComposableMap
                     projection="geoMercator"
-                    // Centro aproximado do Brasil e escala para enquadrar o país
-                    projectionConfig={{ center: [-55, -15], scale: 900 }}
-                    width={800}
-                    height={600}
+                    projectionConfig={{ center: [-51, -25], scale: 4000 }}
+                    className="w-full h-full"
                 >
-                    <Geographies geography={geoData as unknown}>
-                        {({ geographies }: { geographies: GeoFeature[] }) =>
-                            geographies.map((geo) => (
-                                <Geography
-                                    key={geo.rsmKey}
-                                    geography={geo as unknown as Record<string, unknown>}
-                                    onClick={() => handleClick(geo)}
-                                    stroke="#999"
-                                    strokeWidth={0.5}
-                                    style={{
-                                        default: { fill: "#EEE", outline: "none" },
-                                        hover: { fill: "#FACC15", outline: "none" },
-                                        pressed: { fill: "#16A34A", outline: "none" },
-                                    }}
-                                />
-                            ))
-                        }
-                    </Geographies>
+                    <ZoomableGroup center={[-51, -25]} zoom={1}>
+                        {geoData && (
+                            <Geographies geography={geoData}>
+                                {({ geographies }: { geographies: GeoFeature[] }) =>
+                                    geographies.map((geo) => (
+                                        <Geography
+                                            key={geo.rsmKey}
+                                            geography={geo as unknown as Record<string, unknown>}
+                                            onClick={() => handleClick(geo)}
+                                            data-tooltip-id="map-tooltip"
+                                            data-tooltip-content={geo.properties.name}
+                                            stroke="#FFF"
+                                            strokeWidth={0.5}
+                                            style={{
+                                                default: { fill: "#D1D5DB", outline: "none" },
+                                                hover: { fill: "#FACC15", outline: "none", cursor: "pointer" },
+                                                pressed: { fill: "#16A34A", outline: "none" },
+                                            }}
+                                        />
+                                    ))
+                                }
+                            </Geographies>
+                        )}
+                    </ZoomableGroup>
                 </ComposableMap>
-            </div>
 
-            {cidadeSelecionada ? (
-                <div className="w-1/3 p-4 bg-yellow-100 overflow-auto">
-                    <PainelCidade cidade={cidadeSelecionada} />
+                {/* Controles de Zoom manuais (opcional, mas útil) */}
+                <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+                    <div className="bg-white p-2 rounded shadow text-xs text-gray-500">
+                        Use scroll para zoom e arraste para mover
+                    </div>
                 </div>
-            ) : (
-                <div className="w-1/3 p-4 bg-gray-50 text-gray-600">
-                    Clique em um município no mapa para ver detalhes.
-                </div>
-            )}
+                <Tooltip id="map-tooltip" />
+            </div>
         </div>
     );
 }

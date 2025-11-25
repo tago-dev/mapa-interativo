@@ -1,0 +1,1982 @@
+[
+  {
+    "MUNICÍPIO": "Altamira do Paraná",
+    "Prefeito": "ELZA APARECIDA DA SILVA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Araruna, Paraná",
+    "Prefeito": "GUSTAVO FRANÇA DOS SANTOS",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Barbosa Ferraz, Paraná",
+    "Prefeito": "CARLOS ROSA ALVES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Boa Esperança, Paraná",
+    "Prefeito": "JOEL CELSO BUSCARIOL",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Campina da Lagoa",
+    "Prefeito": "GIANNY JOSE GRACIOSO BENTO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Campo Mourão",
+    "Prefeito": "JOÃO DOUGLAS FABRÍCIO",
+    "PARTIDO": "CIDADANIA"
+  },
+  {
+    "MUNICÍPIO": "Corumbataí do Sul",
+    "Prefeito": "ALEXANDRE DONATO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Engenheiro Beltrão",
+    "Prefeito": "ADALMIR JOSÉ GARBIM JÚNIOR",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Farol",
+    "Prefeito": "OCLECIO DE FREITAS MENESES",
+    "PARTIDO": "PODE"
+  },
+  {
+    "MUNICÍPIO": "Fênix",
+    "Prefeito": "EURIPEDES MOLINA TASCA JUNIOR",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Goioerê",
+    "Prefeito": "PEDRO ANTÔNIO DE OLIVEIRA COELHO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Iretama",
+    "Prefeito": "SAME SAAB",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Janiópolis",
+    "Prefeito": "EIDES GUEDES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Juranda, Paraná",
+    "Prefeito": "JOELMA DAMASCENO DEMENECK",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Luiziana",
+    "Prefeito": "EDSON LISS",
+    "PARTIDO": "PDT"
+  },
+  {
+    "MUNICÍPIO": "Mamborê",
+    "Prefeito": "SEBASTIÃO ANTONIO MARTINEZ",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Moreira Sales",
+    "Prefeito": "LUIZ ANTONIO VOLPATO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Nova Cantu",
+    "Prefeito": "AIRTON ANTONIO AGNOLIN",
+    "PARTIDO": "PDT"
+  },
+  {
+    "MUNICÍPIO": "Peabiru",
+    "Prefeito": "JOSÉ MARCOS GONÇALVES LOPES",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Quarto Centenário",
+    "Prefeito": "WILSON AKIO ABE",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Quinta do Sol",
+    "Prefeito": "LEONARDO LAZZARETTI ROMERO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Rancho Alegre d'Oeste",
+    "Prefeito": "EVERTON CÁSSIO ZANUTO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Roncador, Paraná",
+    "Prefeito": "MARILIA PEROTTA BENTO GONÇALVES",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Terra Boa, Paraná",
+    "Prefeito": "VALTER PERES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Ubiratã",
+    "Prefeito": "FABIO DE OLIVEIRA DALECIO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Arapoti",
+    "Prefeito": "IRANI JOSE BARROS",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Carambeí",
+    "Prefeito": "ELISANGELA PEDROSO DE OLIVEIRA NUNES",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Castro, Paraná",
+    "Prefeito": "REINALDO CARDOSO",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Imbaú",
+    "Prefeito": "DAYANE SOVINSKI RODRIGUES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Jaguariaíva",
+    "Prefeito": "JOSÉ SLOBODA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Ortigueira, Paraná",
+    "Prefeito": "ARY DE OLIVEIRA MATTOS",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Palmeira, Paraná",
+    "Prefeito": "ALTAMIR SANSON",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Piraí do Sul",
+    "Prefeito": "HENRIQUE DE OLIVEIRA CARNEIRO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Reserva, Paraná",
+    "Prefeito": "LUCAS MACHADO RIBEIRO",
+    "PARTIDO": "PODE"
+  },
+  {
+    "MUNICÍPIO": "Sengés",
+    "Prefeito": "GERSON NUNES DA SILVA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Telêmaco Borba",
+    "Prefeito": "RITA MARA DE PAULA ARAUJO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Tibagi",
+    "Prefeito": "RILDO EMANOEL LEONARDI",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Ventania",
+    "Prefeito": "JOSE LUIZ BITTENCOURT",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Boa Ventura de São Roque",
+    "Prefeito": "NESTOR KENEAR",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Campina do Simão",
+    "Prefeito": "ANDRÉ JUNIOR DE PAULA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Candói",
+    "Prefeito": "ALDOINO GOLDONI FILHO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Cantagalo, Paraná",
+    "Prefeito": "JOAO KONJUNSKI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Clevelândia",
+    "Prefeito": "RAFAELA MARTINS LOSI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Coronel Domingos Soares",
+    "Prefeito": "MARIA ANTONIETA DE ARAUJO ALMEIDA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Espigão Alto do Iguaçu",
+    "Prefeito": "AGENOR BERTONCELO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Foz do Jordão",
+    "Prefeito": "FRANCISCO CLEI DA SILVA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Goioxim",
+    "Prefeito": "EDER DOS SANTOS",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Guarapuava",
+    "Prefeito": "DENILSON BAITALA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Honório Serpa",
+    "Prefeito": "JOÃO CARLOS GARBIN",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Inácio Martins",
+    "Prefeito": "EDMUNDO VIER",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Laranjal, Paraná",
+    "Prefeito": "MAYCON LOPES SIMIONI",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Laranjeiras do Sul",
+    "Prefeito": "JAISON RODRIGO MENDES",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Mangueirinha",
+    "Prefeito": "LEANDRO DORINI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Marquinho, Paraná",
+    "Prefeito": "ELIO BOLZON JUNIOR",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Mato Rico",
+    "Prefeito": "EDELIR DE JESUS RIBEIRO DA SILVA",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Nova Laranjeiras",
+    "Prefeito": "FABIO ROBERTO DOS SANTOS",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Palmas, Paraná",
+    "Prefeito": "DANIEL RICARDO LANGARO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Palmital, Paraná",
+    "Prefeito": "ROBERTO CARLOS ROSSI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Pinhão, Paraná",
+    "Prefeito": "VALDECIR BIASEBETTI",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Pitanga, Paraná",
+    "Prefeito": "DIRCEU MORAES",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Porto Barreiro",
+    "Prefeito": "EMANOEL VANDERLEI VOLFF",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Quedas do Iguaçu",
+    "Prefeito": "RAFAEL CIRYLLO CHIAPETTI ALVES DE MOURA",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Reserva do Iguaçu",
+    "Prefeito": "VITORIO ANTUNES DE PAULA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Rio Bonito do Iguaçu",
+    "Prefeito": "SEZAR AUGUSTO BOVINO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Santa Maria do Oeste",
+    "Prefeito": "OSCAR DELGADO",
+    "PARTIDO": "PT"
+  },
+  {
+    "MUNICÍPIO": "Turvo",
+    "Prefeito": "ANTONIO MARCOS SEGURO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Virmond",
+    "Prefeito": "FERNANDO MIERZVA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Adrianópolis",
+    "Prefeito": "VANDIR DE OLIVEIRA ROSA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Agudos do Sul",
+    "Prefeito": "GENEZIO GONÇALVES DA LUZ",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Almirante Tamandaré, Paraná",
+    "Prefeito": "CAMILO DANIEL LOVATO",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Antonina, Paraná",
+    "Prefeito": "ROZANE MARISTELA BENEDETTI OSAKI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Araucária",
+    "Prefeito": "LUIZ GUSTAVO BOTOGOSKI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Balsa Nova",
+    "Prefeito": "CLEVER APARECIDO IAVOLSKI POLETTO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Bocaiúva do Sul",
+    "Prefeito": "JOAO DE LIMA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Campina Grande do Sul, Paraná",
+    "Prefeito": "LUIZ CARLOS ASSUNÇÃO",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Campo do Tenente",
+    "Prefeito": "WEVERTON WILLIAN VIZENTIN",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Campo Largo, Paraná",
+    "Prefeito": "MAURICIO ROBERTO RIVABEM",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Campo Magro",
+    "Prefeito": "RILTON BOZA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Cerro Azul, Paraná",
+    "Prefeito": "EDSON CORDEIRO DO NASCIMENTO",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Colombo, Paraná",
+    "Prefeito": "HELDER LUIZ LAZAROTTO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Contenda",
+    "Prefeito": "ANTONIO ADAMIR DIGNER",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Curitiba",
+    "Prefeito": "EDUARDO PIMENTEL SLAVIERO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Doutor Ulysses",
+    "Prefeito": "ESEQUIEL BESTEL JUNIOR",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Fazenda Rio Grande",
+    "Prefeito": "MARCO ANTONIO MARCONDES SILVA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Guaraqueçaba",
+    "Prefeito": "ALESSANDRO CARNEIRO SOARES TRUCHINSKI",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Guaratuba",
+    "Prefeito": "MAURICIO LENSE",
+    "PARTIDO": "PODE"
+  },
+  {
+    "MUNICÍPIO": "Itaperuçu",
+    "Prefeito": "EDILSON RUIZ DE FREITAS",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Lapa, Paraná",
+    "Prefeito": "DIEGO TIMBIRUSSU RIBAS",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Mandirituba",
+    "Prefeito": "FELIPE CLAUDINO MACHADO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Matinhos",
+    "Prefeito": "EDUARDO ANTONIO DALMORA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Morretes",
+    "Prefeito": "SEBASTIÃO BRINDAROLLI JUNIOR",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Paranaguá",
+    "Prefeito": "ADRIANO RAMOS",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Pinhais",
+    "Prefeito": "ROSA MARIA DE JESUS COLOMBO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Piraquara",
+    "Prefeito": "MARCUS MAURICIO DE SOUZA TESSEROLLI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Piên",
+    "Prefeito": "MAICON GROSSKOPF",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Pontal do Paraná",
+    "Prefeito": "RUDISNEY GIMENES FILHO",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Porto Amazonas",
+    "Prefeito": "ELIAS JOCID GOMES DA COSTA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Quatro Barras",
+    "Prefeito": "LORENO BERNARDO TOLARDO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Quitandinha",
+    "Prefeito": "JOSÉ RIBEIRO DE MOURA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Rio Branco do Sul",
+    "Prefeito": "KARIME FAYAD",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Rio Negro, Paraná",
+    "Prefeito": "ALESSANDRO CRISTIAN VON LINSINGEN",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "São José dos Pinhais",
+    "Prefeito": "MARGARIDA MARIA SINGER",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Tijucas do Sul",
+    "Prefeito": "JOSÉ ALTAIR MOREIRA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Tunas do Paraná",
+    "Prefeito": "MARCO ANTONIO BALDÃO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Alto Paraná, Paraná",
+    "Prefeito": "CLAUDEMIR JOIA PEREIRA",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Alto Paraíso, Paraná",
+    "Prefeito": "LUIZ ELISEU DOS SANTOS",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Alto Piquiri",
+    "Prefeito": "GIOVANE MENDES DE CARVALHO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Altônia",
+    "Prefeito": "DIEGO JARDIM PERGO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Amaporã",
+    "Prefeito": "MARCOS MARIN",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Brasilândia do Sul",
+    "Prefeito": "ALEX ANTONIO CAVALCANTE",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Cafezal do Sul",
+    "Prefeito": "PEDRO MINORU INOUE",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Cianorte",
+    "Prefeito": "MARCO ANTONIO FRANZATO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Cidade Gaúcha",
+    "Prefeito": "ALEXANDRE LUCENA",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Cruzeiro do Oeste",
+    "Prefeito": "ARMANDO CERCI JUNIOR",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Cruzeiro do Sul, Paraná",
+    "Prefeito": "MARCOS CÉSAR SUGIGAN",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Diamante do Norte",
+    "Prefeito": "ELIEL DOS SANTOS CORREA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Douradina, Paraná",
+    "Prefeito": "OBERDAM JOSÉ DE OLIVEIRA",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Esperança Nova",
+    "Prefeito": "EVERTON BARBIERI",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "FRANCISCO ALVES, Paraná",
+    "Prefeito": "ALIRIO JOSÉ MISTURA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Guairaçá",
+    "Prefeito": "MARCELO ALVES DE OLIVEIRA",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Guaporema",
+    "Prefeito": "GILBERTO CASTIGLIONI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Icaraíma",
+    "Prefeito": "DEVAIR FABRIS",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Inajá, Paraná",
+    "Prefeito": "JOÃO EDER AGUILAR",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Indianópolis",
+    "Prefeito": "PAULO CEZAR RIZZATO MARTINS",
+    "PARTIDO": "PSDB"
+  },
+  {
+    "MUNICÍPIO": "Iporã",
+    "Prefeito": "ROBERTO DA SILVA",
+    "PARTIDO": "PSDB"
+  },
+  {
+    "MUNICÍPIO": "Itaúna do Sul",
+    "Prefeito": "GILSON JOSÉ DE GOIS",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Ivaté",
+    "Prefeito": "DENILSON VAGLIERI PREVITAL",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Japurá, Paraná",
+    "Prefeito": "ADRIANA CRISTINA POLIZER",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Jardim Olinda",
+    "Prefeito": "WEVERTON JOSÉ DOS SANTOS LIMA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Jussara, Paraná",
+    "Prefeito": "MOACIR LUIZ PEREIRA VALENTINI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Loanda, Paraná",
+    "Prefeito": "JOSE MARIA PEREIRA FERNANDES",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Maria Helena",
+    "Prefeito": "MARLON RANCER MARQUES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Marilena",
+    "Prefeito": "CELIO LELIS DA MATA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Mariluz",
+    "Prefeito": "PAULO ARMANDO DA SILVA ALVES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Mirador, Paraná",
+    "Prefeito": "FABIANO MARCOS DA SILVA TRAVAIN",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Nova Aliança do Ivaí",
+    "Prefeito": "ULISSES DE SOUZA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Nova Londrina",
+    "Prefeito": "LUIZ GUSTAVO MAIOR BONO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Nova Olímpia, Paraná",
+    "Prefeito": "LUIZ LAZARO SORVOS",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Paranacity",
+    "Prefeito": "JOSE CLAUDIO BATISTA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Paranapoema",
+    "Prefeito": "SIDNEI FRAZATTO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Paranavaí",
+    "Prefeito": "MAURÍCIO GEHLEN",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Paraíso do Norte",
+    "Prefeito": "CARLOS ALBERTO VIZZOTTO",
+    "PARTIDO": "PT"
+  },
+  {
+    "MUNICÍPIO": "Perobal",
+    "Prefeito": "CRISTIANO CEZAR MERLINI DE ALBUQUERQUE",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Planaltina do Paraná",
+    "Prefeito": "CELSO MAGGIONI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Porto Rico, Paraná",
+    "Prefeito": "VALTER BATISTA DOS SANTOS",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Pérola",
+    "Prefeito": "VALDETE CARLOS OLIVEIRA GONCALVES DA CUNHA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Querência do Norte",
+    "Prefeito": "ALEX SANDRO FERNANDES",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Rondon, Paraná",
+    "Prefeito": "ROBERTO APARECIDO CORREDATO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Santa Cruz de Monte Castelo",
+    "Prefeito": "WILLIAN CEZAR VIEGA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Santa Isabel do Ivaí",
+    "Prefeito": "JOÃO CARLOS DA SILVA MENDES",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Santa Mônica",
+    "Prefeito": "LUAN GUSTAVO FRAZATTO",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Santo Antônio do Caiuá",
+    "Prefeito": "JOSÉ GABRIEL GONÇALVES FACHIANO",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "São Carlos do Ivaí",
+    "Prefeito": "PAULO FRANCISCO MARINHO DUTRA",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "São Jorge do Patrocínio",
+    "Prefeito": "RONALDO TINTI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "São João do Caiuá",
+    "Prefeito": "STEFAN TOMÉ PAUKA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "São Manoel do Paraná",
+    "Prefeito": "VITOR HUGO RODRIGUES",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "São Pedro do Paraná",
+    "Prefeito": "VANDERLEI CAETANO DE CASTRO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Tamboara",
+    "Prefeito": "GIOVANE MONTEIRO DA SILVA",
+    "PARTIDO": "PSDB"
+  },
+  {
+    "MUNICÍPIO": "Tapejara, Paraná",
+    "Prefeito": "RONALDO ADRIANO VILAS BOAS",
+    "PARTIDO": "SOLIDARIEDADE"
+  },
+  {
+    "MUNICÍPIO": "Tapira, Paraná",
+    "Prefeito": "RONALD ROGÉRIO LOPES SMARZARO",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Terra Rica",
+    "Prefeito": "AGNALDO DE SOUZA COSTA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Tuneiras do Oeste",
+    "Prefeito": "GUERINO MENDONÇA DOS SANTOS",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Umuarama",
+    "Prefeito": "ANTONIO FERNANDO SCANAVACA",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Xambrê",
+    "Prefeito": "DECIO JARDIM",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Alvorada do Sul",
+    "Prefeito": "MARCOS ANTONIO GASPARELLI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Ângulo, Paraná",
+    "Prefeito": "ALEXANDRE DE SOUSA PROFETA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Apucarana",
+    "Prefeito": "RODOLFO MOTA DA SILVA",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Arapongas",
+    "Prefeito": "RAFAEL FELIPE CITA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Arapuã",
+    "Prefeito": "MANOEL SALVADOR",
+    "PARTIDO": "PSDB"
+  },
+  {
+    "MUNICÍPIO": "Ariranha do Ivaí",
+    "Prefeito": "THIAGO EPIFANIO DA SILVA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Astorga, Paraná",
+    "Prefeito": "SUZIE APARECIDA PUCILLO ZANATTA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Atalaia, Paraná",
+    "Prefeito": "CARLOS EDUARDO ARMELIN MARIANI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Bela Vista do Paraíso",
+    "Prefeito": "FABRICIO PASTORE",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Bom Sucesso, Paraná",
+    "Prefeito": "ROSANA FERREIRA LOPES",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Borrazópolis",
+    "Prefeito": "ADILSON LUCCHETTI",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Cafeara",
+    "Prefeito": "ELTON FÁBIO LAZARETTI",
+    "PARTIDO": "PRD"
+  },
+  {
+    "MUNICÍPIO": "Califórnia, Paraná",
+    "Prefeito": "PAULO SÉRGIO CHILEIDE",
+    "PARTIDO": "PSDB"
+  },
+  {
+    "MUNICÍPIO": "Cambira",
+    "Prefeito": "ANA LÚCIA DE OLIVEIRA",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Cambé",
+    "Prefeito": "CONRADO ANGELO SCHELLER",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Centenário do Sul",
+    "Prefeito": "MELQUIADES TAVIAN JUNIOR",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Colorado",
+    "Prefeito": "ROSIMEIRE CHIQUIM",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Cruzmaltina",
+    "Prefeito": "MAURÍCIO BUENO DE CAMARGO",
+    "PARTIDO": "PSDB"
+  },
+  {
+    "MUNICÍPIO": "Cândido de Abreu",
+    "Prefeito": "RENAN MENCK ROMANICHEN",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Doutor Camargo",
+    "Prefeito": "DOUGLAS RIBEIRO DO PRADO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Faxinal",
+    "Prefeito": "HERMES ANTONIO SANTA ROSA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Floraí",
+    "Prefeito": "EDNA DE LOURDES CARPINE CONTIN",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Floresta, Paraná",
+    "Prefeito": "ROGERIO PEREIRA MENDES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Florestópolis",
+    "Prefeito": "ONICIO DE SOUZA",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Flórida",
+    "Prefeito": "ANTONIO EMERSON SETTE",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Godoy Moreira",
+    "Prefeito": "PRIMIS DE OLIVEIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Grandes Rios",
+    "Prefeito": "WILLIAM JOSÉ GONÇALVES",
+    "PARTIDO": "PODE"
+  },
+  {
+    "MUNICÍPIO": "Guaraci, Paraná",
+    "Prefeito": "MARCOS ANTÔNIO DE SOUZA",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Ibiporã",
+    "Prefeito": "JOSÉ MARIA FERREIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Iguaraçu",
+    "Prefeito": "CLAUDIO APARECIDO BERNIN",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Itaguajé",
+    "Prefeito": "RENATO FELIX DE SOUZA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Itambé",
+    "Prefeito": "ANANIAS SOARES VIEIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Ivaiporã",
+    "Prefeito": "LUIZ CARLOS GIL",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Ivatuba",
+    "Prefeito": "VARLEI VERCEZI",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Jaguapitã",
+    "Prefeito": "EDISON RODRIGUES DE ALMEIDA",
+    "PARTIDO": "PRD"
+  },
+  {
+    "MUNICÍPIO": "Jandaia do Sul",
+    "Prefeito": "BENEDITO JOSE PUPIO",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Jardim Alegre",
+    "Prefeito": "MOISES LNORTOVZ DOS SANTOS",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Kaloré",
+    "Prefeito": "WASHINGTON LUIZ DA SILVA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Lidianópolis",
+    "Prefeito": "APARECIDO BUZATO",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Lobato, Paraná",
+    "Prefeito": "FABIO CHICAROLI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Lunardelli",
+    "Prefeito": "LUIZ WANDERLEI MARSON SARDI",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Lupionópolis",
+    "Prefeito": "JOSÉ CARLOS TIBÉRIO",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Mandaguari",
+    "Prefeito": "IVONÉIA DE ANDRADE APARECIDO FURTADO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Mandaguaçu",
+    "Prefeito": "JOSE ROBERTO MENDES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Manoel Ribas",
+    "Prefeito": "JOSE CARLOS DA SILVA CORONA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Marialva",
+    "Prefeito": "FLAVIA CHERONI DA SILVA BRITA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Marilândia do Sul",
+    "Prefeito": "WALMIR PERES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Maringá",
+    "Prefeito": "SILVIO MAGALHAES BARROS II",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Marumbi",
+    "Prefeito": "ELAINE MARIA FERREIRA COSTA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Mauá da Serra",
+    "Prefeito": "GIVANILDO LOPES",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Miraselva",
+    "Prefeito": "JOAO MARCOS FERRER",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Munhoz de Melo",
+    "Prefeito": "ÁUREO GOMES",
+    "PARTIDO": "PODE"
+  },
+  {
+    "MUNICÍPIO": "Nossa Senhora das Graças",
+    "Prefeito": "CLODOALDO APARECIDO RIGIERI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Nova Esperança, Paraná",
+    "Prefeito": "JOAO EDUARDO PASQUINI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Nova Tebas",
+    "Prefeito": "PEDRO LOURENÇO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Novo Itacolomi",
+    "Prefeito": "JOAO PEDRO MAGON",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Ourizona",
+    "Prefeito": "JANILSON MARCOS DONASAN",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Paiçandu",
+    "Prefeito": "ISMAEL BATISTA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Pitangueiras, Paraná",
+    "Prefeito": "SAMUEL TEIXEIRA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Porecatu",
+    "Prefeito": "AGAMEMNON AUGUSTO ARAUJO PADUAN",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Prado Ferreira",
+    "Prefeito": "SILVIO ANTONIO DAMACENO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Presidente Castelo Branco, Paraná",
+    "Prefeito": "JOÃO PERICLES MARTINATI",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Primeiro de Maio, Paraná",
+    "Prefeito": "BRUNO EDUARDO SANTA ROSA BAUERMAMM ESTEVAM",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Rio Bom",
+    "Prefeito": "MOISÉS JOSÉ DE ANDRADE",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Rio Branco do Ivaí",
+    "Prefeito": "PEDRO TABORDA DESPLANCHES",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Rolândia",
+    "Prefeito": "AILTON APARECIDO MAÍSTRO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Rosário do Ivaí",
+    "Prefeito": "ANIZIO CESAR LINO SILVA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Sabáudia",
+    "Prefeito": "EDSON HUGO MANUEIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Santa Fé, Paraná",
+    "Prefeito": "EDSON PALOTTA NETTO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Santa Inês",
+    "Prefeito": "ADENILSON PACHECO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Santo Inácio",
+    "Prefeito": "GENY VIOLATTO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Sarandi, Paraná",
+    "Prefeito": "CARLOS ALBERTO DE PAULA JÚNIOR",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Sertanópolis",
+    "Prefeito": "ANA RUTH SECCO MATTESCO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "São Jorge do Ivaí",
+    "Prefeito": "AGNALDO CARVALHO GUIMARÃES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "São João do Ivaí",
+    "Prefeito": "FÁBIO HIDEK MIURA",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "São Pedro do Ivaí",
+    "Prefeito": "RILDO BERNARDES DE CAMARGO",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Tamarana",
+    "Prefeito": "LUZIA HARUE SUZUKAWA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Uniflor",
+    "Prefeito": "MAYCON RODRIGO RODRIGUES DE SOUZA",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Abatiá",
+    "Prefeito": "SONIA APARECIDA DE SOUZA CHAVES",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Andirá",
+    "Prefeito": "EDNYRA APARECIDA SANCHES BUENO DE GODOY FERREIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Assaí",
+    "Prefeito": "MICHEL ANGELO BOMTEMPO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Bandeirantes, Paraná",
+    "Prefeito": "JAELSON RAMALHO MATTA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Barra do Jacaré",
+    "Prefeito": "LUIZ FABIANO ZANATTA",
+    "PARTIDO": "PDT"
+  },
+  {
+    "MUNICÍPIO": "Cambará",
+    "Prefeito": "WALCIR JOAQUIM",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Carlópolis",
+    "Prefeito": "NILTON DOUGLAS DE MEIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Congonhinhas",
+    "Prefeito": "JOSE OLEGARIO RIBEIRO LOPES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Conselheiro Mairinck",
+    "Prefeito": "JOSELEI APARECIDO DE CARVALHO",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Cornélio Procópio",
+    "Prefeito": "RAPHAEL DIAS SAMPAIO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Curiúva",
+    "Prefeito": "CHRISTIANO GIUNTA BORGES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Figueira, Paraná",
+    "Prefeito": "VALDECIR GARCIA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Guapirama",
+    "Prefeito": "PEDRO DE OLIVEIRA",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Ibaiti",
+    "Prefeito": "ROBERTO REGAZZO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Itambaracá",
+    "Prefeito": "AMARILDO TOSTES",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Jaboti",
+    "Prefeito": "REGIS WILLIAM SIQUEIRA RODRIGUES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Jacarezinho, Paraná",
+    "Prefeito": "MARCELO JOSE BERNARDELI PALHARES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Japira",
+    "Prefeito": "HARIEL VIEIRA FOGAÇA",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Jataizinho",
+    "Prefeito": "WILSON FERNANDES",
+    "PARTIDO": "PDT"
+  },
+  {
+    "MUNICÍPIO": "Joaquim Távora",
+    "Prefeito": "GELSON MANSUR NASSAR",
+    "PARTIDO": "PSDB"
+  },
+  {
+    "MUNICÍPIO": "Jundiaí do Sul",
+    "Prefeito": "PAULO ROBERTO PEDRO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Leópolis",
+    "Prefeito": "LEOMAR MONTEIRO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Nova América da Colina",
+    "Prefeito": "TANIA CRISTINA DA SILVA BASSO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Nova Fátima",
+    "Prefeito": "RENATA MONTENEGRO BALAN XAVIER",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Nova Santa Bárbara",
+    "Prefeito": "CLAUDEMIR VALÉRIO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Pinhalão",
+    "Prefeito": "LUIZ EDUARDO DE CASTRO VANZELI",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Quatiguá",
+    "Prefeito": "IZILDA GLEICIANY RODRIGUES CARRO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Rancho Alegre, Paraná",
+    "Prefeito": "FLAVIO HENRIQUE PEREIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Ribeirão Claro",
+    "Prefeito": "LISANDRO JOSÉ NÉIA BAGGIO",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Ribeirão do Pinhal",
+    "Prefeito": "DARTAGNAN CALIXTO FRAIZ",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Salto do Itararé",
+    "Prefeito": "CLAUDECI JOSÉ DE OLIVEIRA",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Santa Amélia",
+    "Prefeito": "ANTONIO CARLOS TAMAIS",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Santa Cecília do Pavão",
+    "Prefeito": "CLAUDIO COVRE",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Santa Mariana",
+    "Prefeito": "JOSE MARCELO PIOVAN GUIMARAES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Santana do Itararé",
+    "Prefeito": "ELCIO JOSÉ VIDAL",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Santo Antônio da Platina",
+    "Prefeito": "GILSON DE JESUS ESTEVES",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Santo Antônio do Paraíso",
+    "Prefeito": "DEVANIR MARTINELLI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Sapopema",
+    "Prefeito": "PAULO MAXIMIANO DE SOUZA JUNIOR",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Sertaneja, Paraná",
+    "Prefeito": "SAMUEL CARLOS DO PRADO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Siqueira Campos, Paraná",
+    "Prefeito": "LUIZ HENRIQUE GERMANO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "São Jerônimo da Serra",
+    "Prefeito": "VENICIUS DJALMA ROSA",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "São José da Boa Vista",
+    "Prefeito": "JOSE LAZARO FERRAZ",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "São Sebastião da Amoreira",
+    "Prefeito": "EXILAINE GASPAR",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Tomazina",
+    "Prefeito": "CEZAR BUENO DE MELO",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Uraí",
+    "Prefeito": "ANGELO TARANTINI FILHO",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Wenceslau Braz, Paraná",
+    "Prefeito": "LUIZ CARLOS VIDAL",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Anahy",
+    "Prefeito": "ARILSON BATISTA DE SOUZA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Assis Chateaubriand, Paraná",
+    "Prefeito": "MARCEL HENRIQUE MICHELETTO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Boa Vista da Aparecida",
+    "Prefeito": "EDUARDO JOSE HENRICHS",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Braganey",
+    "Prefeito": "VALDIR ZIELINSKI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Cafelândia, Paraná",
+    "Prefeito": "JUNIOR MOTTER",
+    "PARTIDO": "NOVO"
+  },
+  {
+    "MUNICÍPIO": "Campo Bonito",
+    "Prefeito": "MARIO WEBER",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Capitão Leônidas Marques",
+    "Prefeito": "MAXWELL SCAPINI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Cascavel",
+    "Prefeito": "RENATO DA SILVA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Catanduvas, Paraná",
+    "Prefeito": "ADEMAR LUIZ BURCKHARDT",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Corbélia",
+    "Prefeito": "THIAGO DAROSS STEFANELLO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Céu Azul",
+    "Prefeito": "LAURINDO SPEROTTO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Diamante d'Oeste",
+    "Prefeito": "AMARILDO APARECIDO DA SILVA",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Diamante do Sul",
+    "Prefeito": "DARCI TIRELLI",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Entre Rios do Oeste",
+    "Prefeito": "JAIR BOKORNI",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Formosa do Oeste",
+    "Prefeito": "ORIVALDO MUNICELLI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Foz do Iguaçu",
+    "Prefeito": "JOAQUIM SILVA E LUNA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Guaraniaçu",
+    "Prefeito": "JURACI RONALDO CAZELLA",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Guaíra, Paraná",
+    "Prefeito": "GILEADE GABRIEL OSTI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Ibema",
+    "Prefeito": "VIVIANE COMIRAN",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Iguatu",
+    "Prefeito": "MARTINHO LUCAS DE GODOY",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Iracema do Oeste",
+    "Prefeito": "ELZA HAASE RODRIGUES",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Itaipulândia",
+    "Prefeito": "LINDOLFO MARTINS RUI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Jesuítas",
+    "Prefeito": "EDICARLOS GRIZOTTO DE OLIVEIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Lindoeste",
+    "Prefeito": "SILVIO DE SOUZA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Cândido Rondon",
+    "Prefeito": "ADRIANO BACKES",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Maripá",
+    "Prefeito": "RODRIGO ANDRE SCHANOSKI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Matelândia",
+    "Prefeito": "GABRIEL DA SILVA CADINI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Medianeira",
+    "Prefeito": "ANTONIO FRANÇA BENJAMIM",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Mercedes, Paraná",
+    "Prefeito": "LAERTON WEBER",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Missal, Paraná",
+    "Prefeito": "ADILTO LUIS FERRARI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Nova Aurora, Paraná",
+    "Prefeito": "JOSE APARECIDO DE PAULA E SOUZA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Nova Santa Rosa",
+    "Prefeito": "LARI HITZ",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Ouro Verde do Oeste",
+    "Prefeito": "LUCIAN ALUISIO DIERINGS",
+    "PARTIDO": "CIDADANIA"
+  },
+  {
+    "MUNICÍPIO": "Palotina",
+    "Prefeito": "RODRIGO RIBEIRO",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Pato Bragado",
+    "Prefeito": "JOHN JEFERSON WEBER NODARI",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Quatro Pontes",
+    "Prefeito": "CESAR ALEXANDRE SEIDEL",
+    "PARTIDO": "PODE"
+  },
+  {
+    "MUNICÍPIO": "Ramilândia",
+    "Prefeito": "EDSON DOS SANTOS",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Saint Helena",
+    "Prefeito": "CLADEMAR JOAO MARASKIN",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Santa Lúcia, Paraná",
+    "Prefeito": "SILVANO TORTELLI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Santa Tereza do Oeste",
+    "Prefeito": "AMARILDO RIGOLIN",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Santa Terezinha de Itaipu",
+    "Prefeito": "ANTONIO LUIZ BENDO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Serranópolis do Iguaçu",
+    "Prefeito": "GILBERTO MARSARO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "São José das Palmeiras",
+    "Prefeito": "FRANCO MARIA ALVES CABRAL",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "São Miguel do Iguaçu",
+    "Prefeito": "BOAVENTURA MANOEL JOAO MOTTA",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "São Pedro do Iguaçu",
+    "Prefeito": "JACIR DANELLI",
+    "PARTIDO": "PODE"
+  },
+  {
+    "MUNICÍPIO": "Terra Roxa, Paraná",
+    "Prefeito": "IVAN REIS DA SILVA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Toledo, Paraná",
+    "Prefeito": "MARIO CESAR COSTENARO",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "Três Barras do Paraná",
+    "Prefeito": "GERSO FRANCISCO GUSSO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Tupãssi",
+    "Prefeito": "JOSE CARLOS MARIUSSI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Vera Cruz do Oeste",
+    "Prefeito": "EDNEI SGOBI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Antônio Olinto, Paraná",
+    "Prefeito": "FABIO STANISZEWSKI MACHIAVELLI",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Bituruna",
+    "Prefeito": "RODRIGO ROSSONI",
+    "PARTIDO": "PSDB"
+  },
+  {
+    "MUNICÍPIO": "Cruz Machado",
+    "Prefeito": "CARLOS NOWAK",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Fernandes Pinheiro",
+    "Prefeito": "OZIEL NEIVERT",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "General Carneiro",
+    "Prefeito": "JOEL RICARDO MARTINS FERREIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Guamiranga",
+    "Prefeito": "MARCELO LEITE",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Imbituva",
+    "Prefeito": "BERTOLDO ROVER",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Ipiranga, Paraná",
+    "Prefeito": "DOUGLAS DAVI CRUZ",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Irati, Paraná",
+    "Prefeito": "EMILIANO AUGUSTO ROCHA GOMES",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Ivaí",
+    "Prefeito": "ORLI ANTONIO CAMARGO DE CRISTO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Mallet, Paraná",
+    "Prefeito": "PEDRO KOWALCZYK",
+    "PARTIDO": "UNIÃO"
+  },
+  {
+    "MUNICÍPIO": "Paula Freitas",
+    "Prefeito": "SEBASTIÃO ALGACIR DALPRA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Paulo Frontin",
+    "Prefeito": "IRENEU INACIO ZACHARIAS",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Porto Vitória",
+    "Prefeito": "FABIANO JOSÉ GLAAB",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Prudentópolis",
+    "Prefeito": "ADELMO LUIZ KLOSOWSKI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Rebouças",
+    "Prefeito": "LAERCIO ANTONIO CIPRIANO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Rio Azul, Paraná",
+    "Prefeito": "LEANDRO JASINSKI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "São João do Triunfo",
+    "Prefeito": "MARIO CEZAR DA SILVA",
+    "PARTIDO": "PT"
+  },
+  {
+    "MUNICÍPIO": "São Mateus do Sul",
+    "Prefeito": "FERNANDA GARCIA SARDANHA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Teixeira Soares",
+    "Prefeito": "IVANOR LUIZ MULLER",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "União da Vitória",
+    "Prefeito": "ARY CARNEIRO JUNIOR",
+    "PARTIDO": "PSDB"
+  },
+  {
+    "MUNICÍPIO": "Ampére",
+    "Prefeito": "DOUGLAS DIEMS MOROCKOSKI POTRICH",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Barracão, Paraná",
+    "Prefeito": "JORGE LUIZ SANTIN",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Bela Vista da Caroba",
+    "Prefeito": "GELSON MAFFI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Boa Esperança do Iguaçu",
+    "Prefeito": "GIVANILDO TRUMI",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Bom Jesus do Sul",
+    "Prefeito": "HELIO JOSE SURDI",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Bom Sucesso do Sul",
+    "Prefeito": "MAICO DIOGO FAVERSANI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Capanema",
+    "Prefeito": "NEIVOR KESSLER",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Chopinzinho",
+    "Prefeito": "ÁLVARO DÊNIS CENI SCOLARO",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Coronel Vivida",
+    "Prefeito": "ANDERSON MANIQUE BARRETO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Cruzeiro do Iguaçu",
+    "Prefeito": "RENI KOVALSKI",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Dois Vizinhos",
+    "Prefeito": "LUIS CARLOS TURATTO",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Enéas Marques",
+    "Prefeito": "EDSON LUPATINI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Flor da Serra do Sul",
+    "Prefeito": "VALMOR FELIPE JUNIOR",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Francisco Beltrão",
+    "Prefeito": "ANTONIO PEDRON",
+    "PARTIDO": "MDB"
+  },
+  {
+    "MUNICÍPIO": "Itapejara d'Oeste",
+    "Prefeito": "VILMAR SCHMOLLER",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Manfrinópolis",
+    "Prefeito": "AMARILDO ALVES CARNEIRO",
+    "PARTIDO": "PODE"
+  },
+  {
+    "MUNICÍPIO": "Mariópolis",
+    "Prefeito": "MARIO EDUARDO LOPES PAULEK",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Marmeleiro",
+    "Prefeito": "JANDER LUIZ LOSS",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Nova Esperança do Sudoeste",
+    "Prefeito": "JAIME DA SILVA STANG",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Nova Prata do Iguaçu",
+    "Prefeito": "ELIZETE CAVAZIN",
+    "PARTIDO": "PSB"
+  },
+  {
+    "MUNICÍPIO": "Pato Branco",
+    "Prefeito": "GERI NATALINO DUTRA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Pinhal de São Bento",
+    "Prefeito": "PAULO FALCADE DE OLIVEIRA",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Planalto, Paraná",
+    "Prefeito": "LUIZ CARLOS BONI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Pranchita",
+    "Prefeito": "RONIMAR ELEANDRO SARTOR",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Pérola d'Oeste",
+    "Prefeito": "EDSOM LUIZ BAGETTI",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Realeza",
+    "Prefeito": "PAULO CEZAR CASARIL",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Renascença",
+    "Prefeito": "FABIELI MANFREDI",
+    "PARTIDO": "PDT"
+  },
+  {
+    "MUNICÍPIO": "Salgado Filho",
+    "Prefeito": "VOLMAR DUARTE",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Salto do Lontra",
+    "Prefeito": "FERNANDO ALBERTO CADORE",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Santa Izabel do Oeste",
+    "Prefeito": "JEAN PIERR CATTO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Santo Antônio do Sudoeste",
+    "Prefeito": "RICARDO ANTONIO ORTINA",
+    "PARTIDO": "PL"
+  },
+  {
+    "MUNICÍPIO": "Saudade do Iguaçu",
+    "Prefeito": "ROGERIO GALLINA",
+    "PARTIDO": "PP"
+  },
+  {
+    "MUNICÍPIO": "Sulina, Paraná",
+    "Prefeito": "GILBERTO JOÃO ROSSI",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "São Jorge d'Oeste",
+    "Prefeito": "GELSON COELHO DO ROSÁRIO",
+    "PARTIDO": "REPUBLICANOS"
+  },
+  {
+    "MUNICÍPIO": "São João do Triunfo",
+    "Prefeito": "CLOVIS MATEUS CUCCOLOTTO",
+    "PARTIDO": "PSD"
+  },
+  {
+    "MUNICÍPIO": "Verê",
+    "Prefeito": "PAULO ROBERTO WEISSHEIMER",
+    "PARTIDO": "PRD"
+  },
+  {
+    "MUNICÍPIO": "Vitorino, Paraná",
+    "Prefeito": "MARCIANO VOTTRI",
+    "PARTIDO": "PSD"
+  }
+]
