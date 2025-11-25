@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 
 // Tipos (reutilizando/adaptando do MapaBrasil)
@@ -30,7 +30,6 @@ type CidadeProps = {
 
 export default function CidadePage() {
     const params = useParams();
-    const router = useRouter();
     const { id } = params;
     const [cidade, setCidade] = useState<CidadeProps | null>(null);
     const [loading, setLoading] = useState(true);
@@ -47,7 +46,7 @@ export default function CidadePage() {
             .then((res) => res.json())
             .then((data) => {
                 const decodedId = decodeURIComponent(id as string);
-                const feature = data.features.find((f: any) =>
+                const feature = data.features.find((f: { id?: string | number; properties: { id?: string | number; name?: string;[key: string]: unknown } }) =>
                     f.id === id ||
                     f.properties.id === id ||
                     f.properties.name === decodedId ||

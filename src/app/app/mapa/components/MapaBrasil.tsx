@@ -8,6 +8,7 @@ import "react-tooltip/dist/react-tooltip.css";
 // Tipos para as propriedades do GeoJSON
 type GeoFeatureProps = {
     name: string;
+    id?: string | number;
     mesorregiao?: string;
     prefeito?: string;
     partido?: string;
@@ -24,7 +25,7 @@ type GeoFeature = {
 
 export default function MapaBrasil() {
     const router = useRouter();
-    const [geoData, setGeoData] = useState<any>(null);
+    const [geoData, setGeoData] = useState<Record<string, unknown> | null>(null);
 
     useEffect(() => {
         console.log("Iniciando fetch dos dados...");
@@ -44,7 +45,7 @@ export default function MapaBrasil() {
     const handleClick = (geo: GeoFeature) => {
         // Prioriza o ID (pode estar na raiz ou em properties), senão usa o nome
         // O GeoJSON do tbrugz tem o id dentro de properties
-        const id = geo.id || (geo.properties as any).id || geo.properties.name;
+        const id = geo.id || geo.properties.id || geo.properties.name;
         if (id) {
             router.push(`/app/cidade/${encodeURIComponent(id)}`);
         }
