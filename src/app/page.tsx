@@ -22,12 +22,11 @@ export default function Home() {
       <main className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20">
         <div className="max-w-3xl space-y-8">
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
-            Explore o Brasil com <br />
-            <span className="text-blue-500">Dados Inteligentes</span>
+            Mapa <br />
+            <span className="text-blue-500">Interativo</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Uma plataforma completa para visualização de dados demográficos e políticos por município.
-            Navegue pelo mapa, selecione regiões e tome decisões baseadas em dados.
+            plataforma completa privada
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
