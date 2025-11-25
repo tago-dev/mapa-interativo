@@ -1,88 +1,211 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-
-// Tipos (reutilizando/adaptando do MapaBrasil)
-type Vereador = {
-    nome: string;
-    partido: string;
-};
-
-type CidadeProps = {
-    name: string;
-    mesorregiao?: string;
-    eleitores?: number;
-    prefeito?: string;
-    partido?: string;
-    status_prefeito?: string;
-    total_votos?: number;
-    vice_prefeito?: string;
-    partido_vice?: string;
-    status_vice?: string;
-    apoio?: number;
-    nao_apoio?: number;
-    vereadores?: Vereador[];
-    cooperativas?: string[];
-    empresarios?: string[];
-};
+import { CidadeCompleta } from "@/types/types";
+import {
+    fetchCityData,
+    updateCityData,
+    addVereador,
+    deleteVereador,
+    addCooperativa,
+    deleteCooperativa,
+    addEmpresario,
+    deleteEmpresario
+} from "@/utils/supabase/city";
 
 export default function CidadePage() {
     const params = useParams();
     const { id } = params;
-    const [cidade, setCidade] = useState<CidadeProps | null>(null);
+    const [cidade, setCidade] = useState<CidadeCompleta | null>(null);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
-    // Estado para formulário de edição
-    const [formData, setFormData] = useState<CidadeProps>({} as CidadeProps);
+    // Estado para formulário de edição (dados da cidade)
+    const [formData, setFormData] = useState<Partial<CidadeCompleta>>({});
+
+    // Estados para inputs de novos itens
+    const [newVereador, setNewVereador] = useState({ nome: "", partido: "" });
+    const [newCooperativa, setNewCooperativa] = useState({ nome: "" });
+    const [newEmpresario, setNewEmpresario] = useState({ nome: "" });
+
+    const loadData = useCallback(async () => {
+        if (!id) return;
+        setLoading(true);
+        try {
+            const cityId = decodeURIComponent(id as string);
+
+            // 1. Buscar dados básicos do GeoJSON (para garantir nome/mesorregião se não estiver no DB)
+            const res = await fetch("/data/municipios.json");
+            const data = await res.json();
+            const feature = data.features.find((f: { id?: string | number; properties: { id?: string | number; name?: string;[key: string]: unknown } }) =>
+                f.id === id ||
+                f.properties.id === id ||
+                f.properties.name === cityId ||
+                String(f.properties.id) === String(id)
+            );
+
+            // 2. Buscar dados do Supabase
+            const dbData = await fetchCityData(cityId);
+
+            if (feature || dbData) {
+                const baseData = feature ? {
+                    id: cityId,
+                    name: feature.properties.name,
+                    mesorregiao: feature.properties.mesorregiao,
+                    ...feature.properties // outros dados do geojson
+                } : {};
+
+                // Merge: DB data tem prioridade
+                const finalData: CidadeCompleta = {
+                    ...baseData,
+                    ...(dbData || {
+                        id: cityId,
+                        name: baseData.name || cityId,
+                        vereadores: [],
+                        cooperativas: [],
+                        empresarios: []
+                    })
+                };
+
+                // Se dbData existe, usa seus arrays. Se não, usa vazios (não usamos mais mock arrays do geojson para edição)
+                if (dbData) {
+                    finalData.vereadores = dbData.vereadores;
+                    finalData.cooperativas = dbData.cooperativas;
+                    finalData.empresarios = dbData.empresarios;
+                } else {
+                    // Se não tem no DB, inicializa arrays vazios para começar a editar
+                    finalData.vereadores = [];
+                    finalData.cooperativas = [];
+                    finalData.empresarios = [];
+                }
+
+                setCidade(finalData);
+                setFormData(finalData);
+            }
+        } catch (err) {
+            console.error("Erro ao carregar dados:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [id]);
 
     useEffect(() => {
-        if (!id) return;
-
-        // Simulação de fetch - na prática buscaria do Supabase ou JSON
-        fetch("/data/municipios.json")
-            .then((res) => res.json())
-            .then((data) => {
-                const decodedId = decodeURIComponent(id as string);
-                const feature = data.features.find((f: { id?: string | number; properties: { id?: string | number; name?: string;[key: string]: unknown } }) =>
-                    f.id === id ||
-                    f.properties.id === id ||
-                    f.properties.name === decodedId ||
-                    String(f.properties.id) === String(id) // Comparação segura de string/number
-                );
-                if (feature) {
-                    // Mesclar com dados padrão se faltar algo
-                    const dadosCompletos = {
-                        ...feature.properties,
-                        eleitores: feature.properties.eleitores || 15000, // Mock
-                        total_votos: feature.properties.total_votos || 8500, // Mock
-                        partido_vice: feature.properties.partido_vice || feature.properties.partido, // Mock
-                        cooperativas: feature.properties.cooperativas || ["Coop 1", "Coop 2"],
-                        empresarios: feature.properties.empresarios || ["Empresário A", "Empresário B"],
-                    };
-                    setCidade(dadosCompletos);
-                    setFormData(dadosCompletos);
-                }
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error(err);
-                setLoading(false);
-            });
-    }, [id]);
+        loadData();
+    }, [loadData]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSave = () => {
-        // Aqui salvaria no Supabase/Backend
-        setCidade(formData);
-        setIsEditing(false);
-        alert("Dados salvos com sucesso! (Simulação)");
+    const handleSaveCity = async () => {
+        if (!cidade) return;
+        try {
+            // Atualiza apenas dados da tabela cidades
+            const cityUpdate = {
+                name: formData.name,
+                mesorregiao: formData.mesorregiao,
+                eleitores: Number(formData.eleitores),
+                prefeito: formData.prefeito,
+                partido: formData.partido,
+                status_prefeito: formData.status_prefeito,
+                total_votos: Number(formData.total_votos),
+                vice_prefeito: formData.vice_prefeito,
+                partido_vice: formData.partido_vice,
+                status_vice: formData.status_vice,
+                apoio: Number(formData.apoio),
+                nao_apoio: Number(formData.nao_apoio),
+            };
+
+            await updateCityData(cidade.id, cityUpdate);
+            setIsEditing(false);
+            loadData(); // Recarrega para garantir sincronia
+            alert("Dados salvos com sucesso!");
+        } catch (error) {
+            console.error("Erro ao salvar:", error);
+            alert("Erro ao salvar dados.");
+        }
+    };
+
+    // --- Handlers para Vereadores ---
+    const handleAddVereador = async () => {
+        if (!cidade || !newVereador.nome) return;
+        try {
+            await addVereador({
+                cidade_id: cidade.id,
+                nome: newVereador.nome,
+                partido: newVereador.partido
+            });
+            setNewVereador({ nome: "", partido: "" });
+            loadData();
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao adicionar vereador");
+        }
+    };
+
+    const handleDeleteVereador = async (id: string) => {
+        if (!confirm("Tem certeza?")) return;
+        try {
+            await deleteVereador(id);
+            loadData();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    // --- Handlers para Cooperativas ---
+    const handleAddCooperativa = async () => {
+        if (!cidade || !newCooperativa.nome) return;
+        try {
+            await addCooperativa({
+                cidade_id: cidade.id,
+                nome: newCooperativa.nome
+            });
+            setNewCooperativa({ nome: "" });
+            loadData();
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao adicionar cooperativa");
+        }
+    };
+
+    const handleDeleteCooperativa = async (id: string) => {
+        if (!confirm("Tem certeza?")) return;
+        try {
+            await deleteCooperativa(id);
+            loadData();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    // --- Handlers para Empresários ---
+    const handleAddEmpresario = async () => {
+        if (!cidade || !newEmpresario.nome) return;
+        try {
+            await addEmpresario({
+                cidade_id: cidade.id,
+                nome: newEmpresario.nome
+            });
+            setNewEmpresario({ nome: "" });
+            loadData();
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao adicionar empresário");
+        }
+    };
+
+    const handleDeleteEmpresario = async (id: string) => {
+        if (!confirm("Tem certeza?")) return;
+        try {
+            await deleteEmpresario(id);
+            loadData();
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     if (loading) return <div className="flex justify-center items-center h-screen">Carregando...</div>;
@@ -91,12 +214,12 @@ export default function CidadePage() {
     return (
         <div className="min-h-screen bg-white p-8 font-sans relative">
             {/* Botão de Voltar e Editar */}
-            <div className="absolute top-4 right-4 flex gap-2">
+            <div className="absolute top-4 right-4 flex gap-2 z-50">
                 <Link href="/app/mapa" className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">
                     Voltar ao Mapa
                 </Link>
                 <button
-                    onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
+                    onClick={() => (isEditing ? handleSaveCity() : setIsEditing(true))}
                     className={`${isEditing ? "bg-green-600 hover:bg-green-700" : "bg-blue-600 hover:bg-blue-700"
                         } text-white px-4 py-2 rounded`}
                 >
@@ -119,7 +242,7 @@ export default function CidadePage() {
                         <input
                             type="number"
                             name="eleitores"
-                            value={formData.eleitores}
+                            value={formData.eleitores || 0}
                             onChange={handleInputChange}
                             className="text-white bg-gray-700 rounded px-2 py-1 w-full"
                         />
@@ -147,28 +270,31 @@ export default function CidadePage() {
                                 <div className="flex gap-2">
                                     <span className="bg-[#1F2937] text-white text-xs px-2 py-1 rounded">
                                         {isEditing ? (
-                                            <input name="partido" value={formData.partido} onChange={handleInputChange} className="bg-gray-700 w-16" />
+                                            <input name="partido" value={formData.partido || ""} onChange={handleInputChange} className="bg-gray-700 w-16 px-1" placeholder="PARTIDO" />
                                         ) : cidade.partido}
                                     </span>
                                 </div>
                             </div>
                             <div className="flex justify-between items-end">
-                                <div>
+                                <div className="w-full mr-4">
                                     {isEditing ? (
-                                        <input name="prefeito" value={formData.prefeito} onChange={handleInputChange} className="text-xl font-bold text-gray-800 bg-white/50 w-full" />
+                                        <input name="prefeito" value={formData.prefeito || ""} onChange={handleInputChange} className="text-xl font-bold text-gray-800 bg-white/50 w-full mb-1 px-1" placeholder="Nome do Prefeito" />
                                     ) : (
-                                        <h2 className="text-2xl font-bold text-gray-800">{cidade.prefeito}</h2>
+                                        <h2 className="text-2xl font-bold text-gray-800">{cidade.prefeito || "Não informado"}</h2>
                                     )}
-                                    <div className="flex gap-2 mt-1">
-                                        <span className="text-sm text-gray-600">
-                                            Status: {isEditing ? <input name="status_prefeito" value={formData.status_prefeito} onChange={handleInputChange} className="bg-white/50" /> : cidade.status_prefeito}
-                                        </span>
+                                    <div className="flex gap-2 mt-1 items-center">
+                                        <span className="text-sm text-gray-600">Status:</span>
+                                        {isEditing ? (
+                                            <input name="status_prefeito" value={formData.status_prefeito || ""} onChange={handleInputChange} className="bg-white/50 px-1 text-sm" placeholder="Ex: Reeleito" />
+                                        ) : (
+                                            <span className="text-sm font-medium">{cidade.status_prefeito}</span>
+                                        )}
                                     </div>
                                 </div>
-                                <div className="bg-[#1F2937] text-white px-3 py-1 rounded text-center">
+                                <div className="bg-[#1F2937] text-white px-3 py-1 rounded text-center min-w-[80px]">
                                     <span className="text-[10px] block text-gray-400">TOTAL VOTOS</span>
                                     <span className="font-bold">
-                                        {isEditing ? <input name="total_votos" value={formData.total_votos} onChange={handleInputChange} className="bg-gray-700 w-20 text-center" /> : cidade.total_votos?.toLocaleString()}
+                                        {isEditing ? <input name="total_votos" value={formData.total_votos || 0} onChange={handleInputChange} className="bg-gray-700 w-full text-center" /> : cidade.total_votos?.toLocaleString()}
                                     </span>
                                 </div>
                             </div>
@@ -189,20 +315,23 @@ export default function CidadePage() {
                                 </span>
                                 <span className="bg-[#1F2937] text-white text-xs px-2 py-1 rounded">
                                     {isEditing ? (
-                                        <input name="partido_vice" value={formData.partido_vice} onChange={handleInputChange} className="bg-gray-700 w-16" />
+                                        <input name="partido_vice" value={formData.partido_vice || ""} onChange={handleInputChange} className="bg-gray-700 w-16 px-1" placeholder="PARTIDO" />
                                     ) : cidade.partido_vice}
                                 </span>
                             </div>
                             <div>
                                 {isEditing ? (
-                                    <input name="vice_prefeito" value={formData.vice_prefeito} onChange={handleInputChange} className="text-xl font-bold text-gray-800 bg-white/50 w-full" />
+                                    <input name="vice_prefeito" value={formData.vice_prefeito || ""} onChange={handleInputChange} className="text-xl font-bold text-gray-800 bg-white/50 w-full mb-1 px-1" placeholder="Nome do Vice" />
                                 ) : (
-                                    <h2 className="text-2xl font-bold text-gray-800">{cidade.vice_prefeito}</h2>
+                                    <h2 className="text-2xl font-bold text-gray-800">{cidade.vice_prefeito || "Não informado"}</h2>
                                 )}
-                                <div className="flex gap-2 mt-1">
-                                    <span className="text-sm text-gray-600">
-                                        Status: {isEditing ? <input name="status_vice" value={formData.status_vice} onChange={handleInputChange} className="bg-white/50" /> : cidade.status_vice}
-                                    </span>
+                                <div className="flex gap-2 mt-1 items-center">
+                                    <span className="text-sm text-gray-600">Status:</span>
+                                    {isEditing ? (
+                                        <input name="status_vice" value={formData.status_vice || ""} onChange={handleInputChange} className="bg-white/50 px-1 text-sm" placeholder="Ex: Eleito" />
+                                    ) : (
+                                        <span className="text-sm font-medium">{cidade.status_vice}</span>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -210,22 +339,66 @@ export default function CidadePage() {
 
                     {/* Seção de Vereadores */}
                     <div className="bg-[#FEF3C7] p-6 rounded-3xl shadow-sm">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="bg-[#1F4B43] p-2 rounded-full text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-[#1F4B43] p-2 rounded-full text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-xl font-bold text-[#1F4B43] uppercase">Vereadores</h3>
                             </div>
-                            <h3 className="text-xl font-bold text-[#1F4B43] uppercase">Vereadores</h3>
                         </div>
+
                         <div className="space-y-2">
                             {cidade.vereadores?.map((ver, idx) => (
-                                <div key={idx} className="flex justify-between border-b border-gray-300 pb-1">
-                                    <span>{ver.nome}</span>
-                                    <span className="font-bold text-gray-600">{ver.partido}</span>
+                                <div key={ver.id || idx} className="flex justify-between items-center border-b border-gray-300 pb-2">
+                                    <div className="flex-1">
+                                        <span className="font-medium">{ver.nome}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold text-gray-600 bg-white/50 px-2 py-1 rounded text-sm">{ver.partido}</span>
+                                        {isEditing && (
+                                            <button
+                                                onClick={() => handleDeleteVereador(ver.id)}
+                                                className="text-red-500 hover:text-red-700 p-1"
+                                                title="Remover"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
-                            {(!cidade.vereadores || cidade.vereadores.length === 0) && <p className="text-gray-500 italic">Nenhum vereador listado.</p>}
+
+                            {isEditing && (
+                                <div className="flex gap-2 mt-4 pt-2 border-t border-gray-300">
+                                    <input
+                                        placeholder="Nome do Vereador"
+                                        value={newVereador.nome}
+                                        onChange={(e) => setNewVereador({ ...newVereador, nome: e.target.value })}
+                                        className="flex-1 px-3 py-1 rounded border border-gray-300"
+                                    />
+                                    <input
+                                        placeholder="Partido"
+                                        value={newVereador.partido}
+                                        onChange={(e) => setNewVereador({ ...newVereador, partido: e.target.value })}
+                                        className="w-24 px-3 py-1 rounded border border-gray-300"
+                                    />
+                                    <button
+                                        onClick={handleAddVereador}
+                                        className="bg-[#1F4B43] text-white px-3 py-1 rounded hover:bg-[#163832]"
+                                    >
+                                        Adicionar
+                                    </button>
+                                </div>
+                            )}
+
+                            {(!cidade.vereadores || cidade.vereadores.length === 0) && !isEditing && (
+                                <p className="text-gray-500 italic">Nenhum vereador listado.</p>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -242,12 +415,12 @@ export default function CidadePage() {
                                 <input
                                     type="number"
                                     name="apoio"
-                                    value={formData.apoio}
+                                    value={formData.apoio || 0}
                                     onChange={handleInputChange}
                                     className="text-5xl font-bold w-full bg-transparent text-center"
                                 />
                             ) : (
-                                <span className="text-6xl font-bold">{cidade.apoio}</span>
+                                <span className="text-6xl font-bold">{cidade.apoio || 0}</span>
                             )}
                         </div>
                         <div className="bg-[#EF4444] text-white p-4 rounded-2xl shadow-lg w-32 text-center relative">
@@ -258,12 +431,12 @@ export default function CidadePage() {
                                 <input
                                     type="number"
                                     name="nao_apoio"
-                                    value={formData.nao_apoio}
+                                    value={formData.nao_apoio || 0}
                                     onChange={handleInputChange}
                                     className="text-5xl font-bold w-full bg-transparent text-center"
                                 />
                             ) : (
-                                <span className="text-6xl font-bold">{cidade.nao_apoio}</span>
+                                <span className="text-6xl font-bold">{cidade.nao_apoio || 0}</span>
                             )}
                         </div>
                     </div>
@@ -287,11 +460,39 @@ export default function CidadePage() {
                             </div>
                             <h3 className="text-xl font-bold text-[#1F4B43] uppercase">Cooperativas</h3>
                         </div>
-                        <ul className="list-disc list-inside text-gray-700">
+                        <ul className="list-disc list-inside text-gray-700 space-y-1">
                             {cidade.cooperativas?.map((coop, idx) => (
-                                <li key={idx}>{coop}</li>
+                                <li key={coop.id || idx} className="flex justify-between items-center">
+                                    <span>{coop.nome}</span>
+                                    {isEditing && (
+                                        <button
+                                            onClick={() => handleDeleteCooperativa(coop.id)}
+                                            className="text-red-500 hover:text-red-700 ml-2"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    )}
+                                </li>
                             ))}
                         </ul>
+                        {isEditing && (
+                            <div className="flex gap-2 mt-4 pt-2 border-t border-gray-300">
+                                <input
+                                    placeholder="Nova Cooperativa"
+                                    value={newCooperativa.nome}
+                                    onChange={(e) => setNewCooperativa({ ...newCooperativa, nome: e.target.value })}
+                                    className="flex-1 px-3 py-1 rounded border border-gray-300"
+                                />
+                                <button
+                                    onClick={handleAddCooperativa}
+                                    className="bg-[#1F4B43] text-white px-3 py-1 rounded hover:bg-[#163832]"
+                                >
+                                    +
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     {/* Empresários */}
@@ -304,11 +505,39 @@ export default function CidadePage() {
                             </div>
                             <h3 className="text-xl font-bold text-[#1F4B43] uppercase">Empresários</h3>
                         </div>
-                        <ul className="list-disc list-inside text-gray-700">
+                        <ul className="list-disc list-inside text-gray-700 space-y-1">
                             {cidade.empresarios?.map((emp, idx) => (
-                                <li key={idx}>{emp}</li>
+                                <li key={emp.id || idx} className="flex justify-between items-center">
+                                    <span>{emp.nome}</span>
+                                    {isEditing && (
+                                        <button
+                                            onClick={() => handleDeleteEmpresario(emp.id)}
+                                            className="text-red-500 hover:text-red-700 ml-2"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    )}
+                                </li>
                             ))}
                         </ul>
+                        {isEditing && (
+                            <div className="flex gap-2 mt-4 pt-2 border-t border-gray-300">
+                                <input
+                                    placeholder="Novo Empresário"
+                                    value={newEmpresario.nome}
+                                    onChange={(e) => setNewEmpresario({ ...newEmpresario, nome: e.target.value })}
+                                    className="flex-1 px-3 py-1 rounded border border-gray-300"
+                                />
+                                <button
+                                    onClick={handleAddEmpresario}
+                                    className="bg-[#1F4B43] text-white px-3 py-1 rounded hover:bg-[#163832]"
+                                >
+                                    +
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
