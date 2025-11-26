@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mapa Interativo
 
-## Getting Started
+Sistema de visualização e gerenciamento de dados municipais do Estado do Paraná.
 
-First, run the development server:
+## Visao Geral
+
+Aplicacao web que permite visualizar municípios do Paraná em um mapa interativo, com painel administrativo para cadastro e edicao de informacoes sobre prefeitos, vereadores, cooperativas e empresários.
+
+## Stack Tecnologica
+
+- Next.js 15.5
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Supabase (autenticacao e banco de dados)
+- React Simple Maps (visualizacao geografica)
+
+## Requisitos
+
+- Node.js 18+
+- Conta no Supabase com projeto configurado
+
+## Configuracao
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/tago-dev/mapa-interativo.git
+cd mapa-interativo
+```
+
+2. Instale as dependências:
+
+```bash
+npm install
+```
+
+3. Configure as variáveis de ambiente criando um arquivo `.env.local`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=sua_url_supabase
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima
+```
+
+4. Execute o servidor de desenvolvimento:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Acesse `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts Disponíveis
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Comando         | Descricao                                        |
+| --------------- | ------------------------------------------------ |
+| `npm run dev`   | Inicia servidor de desenvolvimento com Turbopack |
+| `npm run build` | Gera build de producao                           |
+| `npm run start` | Inicia servidor de producao                      |
+| `npm run lint`  | Executa verificacao de lint                      |
 
-## Learn More
+## Estrutura do Projeto
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/
+    app/
+      admin/          # Painel administrativo
+      cidade/[id]/    # Pagina publica da cidade
+      mapa/           # Visualizacao do mapa
+      perfil/         # Perfil do usuario
+    login/            # Autenticacao
+  types/              # Definicoes TypeScript
+  utils/
+    supabase/         # Cliente e funcoes do Supabase
+public/
+  data/
+    municipios.json   # Dados geograficos dos municipios
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Funcionalidades
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Mapa Interativo
 
-## Deploy on Vercel
+- Visualizacao de todos os municipios do Paraná
+- Zoom e navegacao
+- Selecao de cidade com redirecionamento para detalhes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Painel Administrativo
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Listagem de todas as cidades com filtros por status e mesorregiao
+- Cadastro rapido de cidades
+- Edicao de dados municipais: prefeito, vice, vereadores, cooperativas, empresários
+
+### Autenticacao
+
+- Login via Supabase Auth
+- Rotas protegidas com middleware
+
+## Banco de Dados
+
+Tabelas necessárias no Supabase:
+
+- `cidades`: dados dos municipios
+- `vereadores`: vereadores por cidade
+- `cooperativas`: cooperativas por cidade
+- `empresarios`: empresários por cidade
+
+## Licenca
+
+Projeto privado.
