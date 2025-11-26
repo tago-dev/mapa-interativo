@@ -20,7 +20,7 @@ export default function AdminDashboard() {
     const [dbCities, setDbCities] = useState<Cidade[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filterStatus, setFilterStatus] = useState<"all" | "registered" | "pending">("all");
+    const [filterStatus, setFilterStatus] = useState<"all" | "complete" | "incomplete" | "pending">("all");
     const [filterMesorregiao, setFilterMesorregiao] = useState<string>("all");
     const [registeringIds, setRegisteringIds] = useState<Set<string>>(new Set());
 
@@ -43,6 +43,18 @@ export default function AdminDashboard() {
     useEffect(() => {
         loadData();
     }, [loadData]);
+
+    // Função para verificar se cidade tem dados completos
+    const isCityComplete = (city: Cidade): boolean => {
+        return !!(city.prefeito && city.partido);
+    };
+
+    // Função para obter o status da cidade
+    const getCityStatus = (id: string | number): "complete" | "incomplete" | "pending" => {
+        const city = dbCities.find(c => String(c.id) === String(id));
+        if (!city) return "pending";
+        return isCityComplete(city) ? "complete" : "incomplete";
+    };
 
     // Função para registrar cidade rapidamente
     const handleQuickRegister = async (feature: GeoFeature) => {
@@ -81,13 +93,21 @@ export default function AdminDashboard() {
     // Estatísticas
     const stats = useMemo(() => {
         const total = geoCities.length;
-        const registered = geoCities.filter(f => {
+        let complete = 0;
+        let incomplete = 0;
+        let pending = 0;
+
+        geoCities.forEach(f => {
             const id = f.id || f.properties.id;
-            return dbCities.some(c => String(c.id) === String(id));
-        }).length;
-        const pending = total - registered;
-        const percentage = total > 0 ? Math.round((registered / total) * 100) : 0;
-        return { total, registered, pending, percentage };
+            const status = getCityStatus(id as string);
+            if (status === "complete") complete++;
+            else if (status === "incomplete") incomplete++;
+            else pending++;
+        });
+
+        const registered = complete + incomplete;
+        const percentage = total > 0 ? Math.round((complete / total) * 100) : 0;
+        return { total, complete, incomplete, pending, registered, percentage };
     }, [geoCities, dbCities]);
 
     // Filtragem
@@ -95,7 +115,7 @@ export default function AdminDashboard() {
         return geoCities.filter(feature => {
             const id = feature.id || feature.properties.id;
             const name = feature.properties.name.toLowerCase();
-            const isRegistered = dbCities.some(c => String(c.id) === String(id));
+            const status = getCityStatus(id as string);
 
             // Filtro de busca
             if (searchTerm && !name.includes(searchTerm.toLowerCase())) {
@@ -103,8 +123,7 @@ export default function AdminDashboard() {
             }
 
             // Filtro de status
-            if (filterStatus === "registered" && !isRegistered) return false;
-            if (filterStatus === "pending" && isRegistered) return false;
+            if (filterStatus !== "all" && status !== filterStatus) return false;
 
             // Filtro de mesorregião
             if (filterMesorregiao !== "all" && feature.properties.mesorregiao !== filterMesorregiao) {
@@ -152,11 +171,11 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Cards de Estatísticas */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
                     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-slate-500">Total de Cidades</p>
+                                <p className="text-sm font-medium text-slate-500">Total</p>
                                 <p className="text-3xl font-bold text-slate-800 mt-1">{stats.total}</p>
                             </div>
                             <div className="bg-slate-100 p-3 rounded-lg">
@@ -170,12 +189,26 @@ export default function AdminDashboard() {
                     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-slate-500">Registradas</p>
-                                <p className="text-3xl font-bold text-emerald-600 mt-1">{stats.registered}</p>
+                                <p className="text-sm font-medium text-slate-500">Completas</p>
+                                <p className="text-3xl font-bold text-emerald-600 mt-1">{stats.complete}</p>
                             </div>
                             <div className="bg-emerald-100 p-3 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-slate-500">Incompletas</p>
+                                <p className="text-3xl font-bold text-orange-600 mt-1">{stats.incomplete}</p>
+                            </div>
+                            <div className="bg-orange-100 p-3 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                 </svg>
                             </div>
                         </div>
@@ -247,10 +280,16 @@ export default function AdminDashboard() {
                                     Todas
                                 </button>
                                 <button
-                                    onClick={() => setFilterStatus("registered")}
-                                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${filterStatus === "registered" ? "bg-white text-emerald-700 shadow-sm" : "text-slate-600 hover:text-slate-800"}`}
+                                    onClick={() => setFilterStatus("complete")}
+                                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${filterStatus === "complete" ? "bg-white text-emerald-700 shadow-sm" : "text-slate-600 hover:text-slate-800"}`}
                                 >
-                                    Registradas
+                                    Completas
+                                </button>
+                                <button
+                                    onClick={() => setFilterStatus("incomplete")}
+                                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${filterStatus === "incomplete" ? "bg-white text-orange-700 shadow-sm" : "text-slate-600 hover:text-slate-800"}`}
+                                >
+                                    Incompletas
                                 </button>
                                 <button
                                     onClick={() => setFilterStatus("pending")}
@@ -299,7 +338,7 @@ export default function AdminDashboard() {
                                 {filteredCities.map((feature, index) => {
                                     const id = feature.id || feature.properties.id;
                                     const name = feature.properties.name;
-                                    const isRegistered = dbCities.some(c => String(c.id) === String(id));
+                                    const status = getCityStatus(id as string);
 
                                     return (
                                         <tr
@@ -308,7 +347,9 @@ export default function AdminDashboard() {
                                         >
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center gap-3">
-                                                    <div className={`w-2 h-2 rounded-full ${isRegistered ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                                                    <div className={`w-2 h-2 rounded-full ${status === 'complete' ? 'bg-emerald-500' :
+                                                            status === 'incomplete' ? 'bg-orange-500' : 'bg-slate-300'
+                                                        }`}></div>
                                                     <span className="text-sm font-medium text-slate-900">{name}</span>
                                                 </div>
                                             </td>
@@ -316,12 +357,19 @@ export default function AdminDashboard() {
                                                 <span className="text-sm text-slate-600">{feature.properties.mesorregiao || "—"}</span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                {isRegistered ? (
+                                                {status === "complete" ? (
                                                     <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                                         </svg>
-                                                        Registrado
+                                                        Completo
+                                                    </span>
+                                                ) : status === "incomplete" ? (
+                                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                        </svg>
+                                                        Incompleto
                                                     </span>
                                                 ) : (
                                                     <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800">
@@ -334,7 +382,7 @@ export default function AdminDashboard() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <div className="flex items-center justify-end gap-2">
-                                                    {!isRegistered && (
+                                                    {status === "pending" && (
                                                         <button
                                                             onClick={() => handleQuickRegister(feature)}
                                                             disabled={registeringIds.has(String(id))}
@@ -360,7 +408,7 @@ export default function AdminDashboard() {
                                                     )}
                                                     <Link
                                                         href={`/app/admin/cidade/${encodeURIComponent(String(id || ""))}`}
-                                                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${isRegistered
+                                                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${status !== "pending"
                                                             ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                                                             : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                                                             }`}
@@ -368,7 +416,7 @@ export default function AdminDashboard() {
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                         </svg>
-                                                        {isRegistered ? 'Editar' : 'Detalhes'}
+                                                        {status !== "pending" ? 'Editar' : 'Detalhes'}
                                                     </Link>
                                                 </div>
                                             </td>
