@@ -43,7 +43,7 @@ export default function MapaBrasil() {
     const handleClick = (geo: GeoFeature) => {
         const id = geo.id || geo.properties.id || geo.properties.name;
         if (id) {
-            router.push(`/app/cidade/${encodeURIComponent(id)}`);
+            router.push(`/cidade/${encodeURIComponent(id)}`);
         }
     };
 

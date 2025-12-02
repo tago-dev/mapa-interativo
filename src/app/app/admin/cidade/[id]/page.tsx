@@ -232,7 +232,7 @@ export default function AdminCidadePage() {
                     </div>
                     <div className="flex gap-3">
                         <Link
-                            href={`/app/cidade/${encodeURIComponent(cidade.id)}`}
+                            href={`/cidade/${encodeURIComponent(cidade.id)}`}
                             className="text-sm text-slate-500 hover:text-slate-700"
                         >
                             Ver página pública
