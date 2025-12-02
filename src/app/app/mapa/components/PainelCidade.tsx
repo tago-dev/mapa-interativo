@@ -4,7 +4,7 @@ interface Vereador {
 }
 
 interface Cidade {
-    name: string; // GeoJSON usa 'name'
+    name: string;
     mesorregiao?: string;
     prefeito?: string;
     partido?: string;
@@ -22,7 +22,6 @@ export default function PainelCidade({ cidade }: { cidade: Cidade }) {
 
     return (
         <div className="p-6 space-y-6">
-            {/* Cabeçalho */}
             <header className="border-b border-gray-200 pb-4">
                 <h2 className="text-2xl font-bold text-gray-800">{cidade.name}</h2>
                 {cidade.mesorregiao && (
@@ -32,14 +31,12 @@ export default function PainelCidade({ cidade }: { cidade: Cidade }) {
                 )}
             </header>
 
-            {/* Seção do Executivo */}
             <section>
                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
                     Poder Executivo
                 </h3>
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 p-4 rounded-xl border border-blue-200">
-                    {/* Prefeito */}
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
                             <p className="text-xs text-blue-600 font-medium uppercase tracking-wide">Prefeito(a)</p>
@@ -60,7 +57,6 @@ export default function PainelCidade({ cidade }: { cidade: Cidade }) {
                         )}
                     </div>
 
-                    {/* Vice-Prefeito */}
                     {cidade.vice_prefeito && (
                         <div className="pt-3 border-t border-blue-200/60">
                             <p className="text-xs text-blue-600 font-medium uppercase tracking-wide">Vice-Prefeito(a)</p>
@@ -76,14 +72,12 @@ export default function PainelCidade({ cidade }: { cidade: Cidade }) {
                 </div>
             </section>
 
-            {/* Seção de Composição da Câmara */}
             <section>
                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
                     Composição da Câmara
                 </h3>
 
-                {/* Barra de Progresso */}
                 {totalVereadores > 0 && (
                     <div className="mb-4">
                         <div className="flex justify-between text-xs text-gray-600 mb-1.5">
@@ -99,7 +93,6 @@ export default function PainelCidade({ cidade }: { cidade: Cidade }) {
                     </div>
                 )}
 
-                {/* Cards de Apoio */}
                 <div className="grid grid-cols-2 gap-3">
                     <div className="bg-gradient-to-br from-green-50 to-green-100/50 p-4 rounded-xl border border-green-200 text-center">
                         <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -118,7 +111,6 @@ export default function PainelCidade({ cidade }: { cidade: Cidade }) {
                 </div>
             </section>
 
-            {/* Lista de Vereadores */}
             {cidade.vereadores && cidade.vereadores.length > 0 && (
                 <section>
                     <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">

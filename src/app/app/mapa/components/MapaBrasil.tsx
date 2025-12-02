@@ -5,7 +5,6 @@ import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simp
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 
-// Tipos para as propriedades do GeoJSON
 type GeoFeatureProps = {
     name: string;
     id?: string | number;
@@ -59,7 +58,6 @@ export default function MapaBrasil() {
     return (
         <div className="flex h-full w-full overflow-hidden">
             <div className="w-full h-full relative bg-slate-50">
-                {/* Título flutuante */}
                 <div className="absolute top-4 left-4 z-10">
                     <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm px-4 py-2 border border-slate-200">
                         <h2 className="text-base font-semibold text-slate-800">Paraná</h2>
@@ -67,7 +65,6 @@ export default function MapaBrasil() {
                     </div>
                 </div>
 
-                {/* Cidade em hover */}
                 {hoveredCity && (
                     <div className="absolute top-4 right-4 z-10">
                         <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm px-4 py-2 border border-slate-200">
@@ -124,7 +121,6 @@ export default function MapaBrasil() {
                     </ZoomableGroup>
                 </ComposableMap>
 
-                {/* Controles de Zoom e informações */}
                 <div className="absolute bottom-4 right-4 z-10">
                     <div className="bg-white/95 backdrop-blur-sm px-3 py-2 rounded-lg shadow-sm border border-slate-200">
                         <span className="text-xs text-slate-500">Scroll para zoom • Arraste para mover</span>

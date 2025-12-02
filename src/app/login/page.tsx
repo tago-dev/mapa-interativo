@@ -45,13 +45,10 @@ function LoginForm() {
                 }} />
             </div>
 
-            {/* Glow effect */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
 
             <div className="relative z-10 w-full max-w-md px-4">
-                {/* Card principal */}
                 <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
-                    {/* Header */}
                     <div className="bg-slate-800/50 px-8 py-6 border-b border-slate-700/50">
                         <h1 className="text-xl font-semibold text-center text-white">
                             Área Restrita
@@ -61,7 +58,6 @@ function LoginForm() {
                         </p>
                     </div>
 
-                    {/* Form */}
                     <form onSubmit={entrar} className="p-8 space-y-5">
                         {erro && (
                             <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
@@ -110,13 +106,11 @@ function LoginForm() {
                         </button>
                     </form>
 
-                    {/* Footer */}
                     <div className="px-8 pb-6">
                         <p className="text-xs text-slate-500 text-center">Conexão segura e criptografada</p>
                     </div>
                 </div>
 
-                {/* Aviso de segurança */}
                 <p className="text-center text-xs text-slate-600 mt-6">
                     Este sistema é monitorado. Tentativas de acesso não autorizado serão registradas.
                 </p>
