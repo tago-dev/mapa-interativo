@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
-    const supabase = createServerComponentClient({ cookies });
+    const cookieStore = await cookies();
+    const supabase = createServerComponentClient({ cookies: () => Promise.resolve(cookieStore) });
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {

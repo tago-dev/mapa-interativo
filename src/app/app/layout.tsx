@@ -7,7 +7,8 @@ export const dynamic = "force-dynamic";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
     // Guarda todas as rotas /app/* no servidor como fallback, além do middleware
-    const supabase = createServerComponentClient({ cookies });
+    const cookieStore = await cookies();
+    const supabase = createServerComponentClient({ cookies: () => Promise.resolve(cookieStore) });
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
         // Evita loop e manda pro login; após login, a página padrão é /app/mapa
