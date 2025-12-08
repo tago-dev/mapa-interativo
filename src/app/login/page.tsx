@@ -2,7 +2,7 @@
 import React, { useState, useMemo, Suspense } from "react";
 export const dynamic = "force-dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/utils/supabase/client";
 
 function LoginForm() {
     const [email, setEmail] = useState("");
@@ -11,7 +11,7 @@ function LoginForm() {
     const [erro, setErro] = useState("");
     const router = useRouter();
     const searchParams = useSearchParams();
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
 
     const redirectTo = useMemo(() => {
         const raw = searchParams.get("redirectedFrom");

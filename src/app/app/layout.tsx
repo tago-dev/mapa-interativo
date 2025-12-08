@@ -1,16 +1,14 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
     // Guarda todas as rotas /app/* no servidor como fallback, além do middleware
-    const cookieStore = await cookies();
-    const supabase = createServerComponentClient({ cookies: () => Promise.resolve(cookieStore) });
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
         // Evita loop e manda pro login; após login, a página padrão é /app/mapa
         redirect("/login?redirectedFrom=/app");
     }
@@ -39,7 +37,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <span className="text-sm text-slate-500 hidden md:block">{session.user.email}</span>
+                    <span className="text-sm text-slate-500 hidden md:block">{user.email}</span>
                     <Link
                         href="/app/sair"
                         className="text-sm text-slate-400 hover:text-white transition-colors"
@@ -48,6 +46,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                     </Link>
                 </div>
             </header>
+
 
             <main className="flex-1 pt-[52px]">{children}</main>
         </div>

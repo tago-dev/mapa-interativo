@@ -1,36 +1,61 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { type NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+export async function middleware(request: NextRequest) {
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
 
-  const supabase = createMiddlewareClient({ req, res });
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            request.cookies.set(name, value);
+          });
+          response = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const pathname = req.nextUrl.pathname;
+  const pathname = request.nextUrl.pathname;
   const isLoginPage = pathname === "/login";
   const isProtectedRoute = pathname.startsWith("/app");
   const isLogoutRoute = pathname === "/app/sair";
 
-  if (!session && isProtectedRoute && !isLogoutRoute) {
-    const redirectUrl = req.nextUrl.clone();
+  if (!user && isProtectedRoute && !isLogoutRoute) {
+    const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
-    redirectUrl.searchParams.set("redirectedFrom", req.nextUrl.pathname);
-    return NextResponse.redirect(redirectUrl, { headers: res.headers });
+    redirectUrl.searchParams.set("redirectedFrom", request.nextUrl.pathname);
+    return NextResponse.redirect(redirectUrl);
   }
 
-  if (session && isLoginPage) {
-    const redirectUrl = req.nextUrl.clone();
+  if (user && isLoginPage) {
+    const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/app/mapa";
-    return NextResponse.redirect(redirectUrl, { headers: res.headers });
+    return NextResponse.redirect(redirectUrl);
   }
 
-  return res;
+  return response;
 }
+
 
 export const config = {
   matcher: ["/login", "/app/:path*"],

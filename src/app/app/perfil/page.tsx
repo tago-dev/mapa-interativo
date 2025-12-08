@@ -1,19 +1,15 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
-    const cookieStore = await cookies();
-    const supabase = createServerComponentClient({ cookies: () => Promise.resolve(cookieStore) });
-    const { data: { session } } = await supabase.auth.getSession();
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (!user) {
         redirect("/login");
     }
-
-    const user = session.user;
 
     return (
         <div className="min-h-screen bg-slate-100 p-6">
