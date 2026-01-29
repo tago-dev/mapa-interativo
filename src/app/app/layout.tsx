@@ -1,16 +1,15 @@
 import Link from "next/link";
+import { currentUser } from "@clerk/nextjs/server";
+import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-    // Guarda todas as rotas /app/* no servidor como fallback, além do middleware
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await currentUser();
+
     if (!user) {
-        // Evita loop e manda pro login; após login, a página padrão é /app/mapa
-        redirect("/login?redirectedFrom=/app");
+        redirect("/login");
     }
 
     return (
@@ -37,13 +36,17 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <span className="text-sm text-slate-500 hidden md:block">{user.email}</span>
-                    <Link
-                        href="/app/sair"
-                        className="text-sm text-slate-400 hover:text-white transition-colors"
-                    >
-                        Sair
-                    </Link>
+                    <span className="text-sm text-slate-500 hidden md:block">
+                        {user.emailAddresses[0]?.emailAddress}
+                    </span>
+                    <UserButton
+                        afterSignOutUrl="/login"
+                        appearance={{
+                            elements: {
+                                avatarBox: "w-8 h-8",
+                            }
+                        }}
+                    />
                 </div>
             </header>
 

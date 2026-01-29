@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
 
 export async function GET(req: NextRequest) {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  // Com o Clerk, o logout é gerenciado pelo componente SignOutButton ou UserButton
+  // Esta rota apenas redireciona para a página de login
   const base = req.nextUrl.origin;
   return NextResponse.redirect(new URL("/login", base));
 }
