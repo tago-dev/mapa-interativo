@@ -46,7 +46,8 @@ export default function CidadePage() {
                         name: baseData.name || cityId,
                         vereadores: [],
                         cooperativas: [],
-                        empresarios: []
+                        empresarios: [],
+                        imprensa: []
                     })
                 };
 
@@ -54,10 +55,12 @@ export default function CidadePage() {
                     finalData.vereadores = dbData.vereadores;
                     finalData.cooperativas = dbData.cooperativas;
                     finalData.empresarios = dbData.empresarios;
+                    finalData.imprensa = dbData.imprensa;
                 } else {
                     finalData.vereadores = [];
                     finalData.cooperativas = [];
                     finalData.empresarios = [];
+                    finalData.imprensa = [];
                 }
 
                 setCidade(finalData);
@@ -211,6 +214,32 @@ export default function CidadePage() {
                             ))}
                             {(!cidade.empresarios || cidade.empresarios.length === 0) && (
                                 <p className="text-slate-400 text-sm">Nenhum empresário cadastrado.</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Imprensa */}
+                    <div className="bg-white rounded-lg border border-slate-200 p-6">
+                        <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">
+                            Imprensa ({cidade.imprensa?.length || 0})
+                        </h2>
+
+                        <div className="space-y-2">
+                            {cidade.imprensa?.map((imp, idx) => (
+                                <div key={imp.id || idx} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0">
+                                    <div>
+                                        <span className="text-sm text-slate-700">{imp.nome}</span>
+                                        {imp.contato && (
+                                            <p className="text-xs text-slate-400 mt-0.5">{imp.contato}</p>
+                                        )}
+                                    </div>
+                                    {imp.tipo && (
+                                        <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded">{imp.tipo}</span>
+                                    )}
+                                </div>
+                            ))}
+                            {(!cidade.imprensa || cidade.imprensa.length === 0) && (
+                                <p className="text-slate-400 text-sm">Nenhuma imprensa cadastrada.</p>
                             )}
                         </div>
                     </div>
