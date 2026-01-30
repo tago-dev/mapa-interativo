@@ -38,8 +38,18 @@ export interface Empresario {
     created_at?: string;
 }
 
+export interface Imprensa {
+    id: string;
+    cidade_id: string;
+    nome: string;
+    tipo?: string; // jornal, rádio, tv, portal, etc.
+    contato?: string;
+    created_at?: string;
+}
+
 export interface CidadeCompleta extends Cidade {
     vereadores: Vereador[];
     cooperativas: Cooperativa[];
     empresarios: Empresario[];
+    imprensa: Imprensa[];
 }

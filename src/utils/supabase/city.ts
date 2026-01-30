@@ -1,5 +1,5 @@
 import { supabase } from './client';
-import { Cidade, CidadeCompleta, Vereador, Cooperativa, Empresario } from '@/types/types';
+import { Cidade, CidadeCompleta, Vereador, Cooperativa, Empresario, Imprensa } from '@/types/types';
 
 export async function fetchCityData(id: string): Promise<CidadeCompleta | null> {
     // Busca dados da cidade
@@ -17,17 +17,19 @@ export async function fetchCityData(id: string): Promise<CidadeCompleta | null> 
     if (!cidade) return null;
 
     // Busca dados relacionados em paralelo
-    const [vereadoresRes, cooperativasRes, empresariosRes] = await Promise.all([
+    const [vereadoresRes, cooperativasRes, empresariosRes, imprensaRes] = await Promise.all([
         supabase.from('vereadores').select('*').eq('cidade_id', id),
         supabase.from('cooperativas').select('*').eq('cidade_id', id),
-        supabase.from('empresarios').select('*').eq('cidade_id', id)
+        supabase.from('empresarios').select('*').eq('cidade_id', id),
+        supabase.from('imprensa').select('*').eq('cidade_id', id)
     ]);
 
     return {
         ...cidade,
         vereadores: vereadoresRes.data || [],
         cooperativas: cooperativasRes.data || [],
-        empresarios: empresariosRes.data || []
+        empresarios: empresariosRes.data || [],
+        imprensa: imprensaRes.data || []
     };
 }
 
@@ -138,6 +140,37 @@ export async function updateEmpresario(id: string, data: Partial<Empresario>) {
 export async function deleteEmpresario(id: string) {
     const { error } = await supabase
         .from('empresarios')
+        .delete()
+        .eq('id', id);
+
+    if (error) throw error;
+}
+
+// --- Imprensa ---
+
+export async function addImprensa(imprensa: Omit<Imprensa, 'id' | 'created_at'>) {
+    const { data, error } = await supabase
+        .from('imprensa')
+        .insert(imprensa)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+export async function updateImprensa(id: string, data: Partial<Imprensa>) {
+    const { error } = await supabase
+        .from('imprensa')
+        .update(data)
+        .eq('id', id);
+
+    if (error) throw error;
+}
+
+export async function deleteImprensa(id: string) {
+    const { error } = await supabase
+        .from('imprensa')
         .delete()
         .eq('id', id);
 
