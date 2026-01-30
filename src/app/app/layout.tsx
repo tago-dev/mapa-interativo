@@ -12,6 +12,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         redirect("/login");
     }
 
+    // Verifica status de acesso
+    const accessStatus = user.publicMetadata?.accessStatus as string | undefined;
+    const isAdmin = user.publicMetadata?.role === "admin";
+    const hasAccess = accessStatus === "approved" || isAdmin;
+
+    // Se não tem acesso e não está na página de acesso pendente, redireciona
+    const isAccessPendingPage = false; // Será verificado no componente filho
+
     return (
         <div className="min-h-screen flex flex-col bg-slate-100">
             <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900 border-b border-slate-800 px-6 py-3 flex justify-between items-center">
@@ -19,20 +27,30 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                     <Link href="/app/mapa" className="font-semibold text-white text-lg hover:text-slate-300 transition-colors">
                         Sistema de Monitoramento
                     </Link>
-                    <nav className="hidden sm:flex items-center gap-4">
-                        <Link
-                            href="/app/mapa"
-                            className="text-sm text-slate-400 hover:text-white transition-colors"
-                        >
-                            Mapa
-                        </Link>
-                        <Link
-                            href="/app/admin"
-                            className="text-sm text-slate-400 hover:text-white transition-colors"
-                        >
-                            Admin
-                        </Link>
-                    </nav>
+                    {hasAccess && (
+                        <nav className="hidden sm:flex items-center gap-4">
+                            <Link
+                                href="/app/mapa"
+                                className="text-sm text-slate-400 hover:text-white transition-colors"
+                            >
+                                Mapa
+                            </Link>
+                            <Link
+                                href="/app/admin"
+                                className="text-sm text-slate-400 hover:text-white transition-colors"
+                            >
+                                Admin
+                            </Link>
+                            {isAdmin && (
+                                <Link
+                                    href="/app/admin/usuarios"
+                                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                                >
+                                    Usuários
+                                </Link>
+                            )}
+                        </nav>
+                    )}
                 </div>
 
                 <div className="flex items-center gap-4">
