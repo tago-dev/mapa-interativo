@@ -136,17 +136,28 @@ export default function CSVUploadModal({ isOpen, onClose, onImport, existingCity
         headers.forEach((header, index) => {
             const field = CSV_COLUMN_MAP[header];
             // Ignora campos de timestamp - são gerenciados pelo banco
-            if (field && field !== 'created_at' && field !== 'updated_at' && row[index] !== undefined && row[index] !== '') {
-                const value = row[index].replace(/^["']|["']$/g, '').trim();
+            if (field && field !== 'created_at' && field !== 'updated_at') {
+                const rawValue = row[index];
 
-                if (!value) return; // Ignora valores vazios
+                // Ignora valores undefined, null ou vazios
+                if (rawValue === undefined || rawValue === null || rawValue === '') {
+                    return;
+                }
+
+                const value = rawValue.replace(/^["']|["']$/g, '').trim();
+
+                if (!value) return; // Ignora valores vazios após trim
 
                 // Converte campos numéricos
                 if (['eleitores', 'total_votos', 'apoio', 'nao_apoio'].includes(field)) {
-                    const numValue = parseInt(value.replace(/\D/g, ''), 10);
-                    if (!isNaN(numValue)) {
-                        (city as Record<string, unknown>)[field] = numValue;
+                    const cleanedValue = value.replace(/\D/g, '');
+                    if (cleanedValue) {
+                        const numValue = parseInt(cleanedValue, 10);
+                        if (!isNaN(numValue)) {
+                            (city as Record<string, unknown>)[field] = numValue;
+                        }
                     }
+                    // Se não for um número válido, simplesmente não adiciona o campo
                 } else {
                     (city as Record<string, unknown>)[field] = value;
                 }

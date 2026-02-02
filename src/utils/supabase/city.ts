@@ -54,25 +54,45 @@ export async function upsertCityData(data: Partial<Cidade>) {
 }
 
 export async function bulkUpsertCities(cities: Partial<Cidade>[]) {
-    // Processa em lotes de 50 para evitar timeout
-    const batchSize = 50;
+    // Processa em lotes de 25 para evitar timeout
+    const batchSize = 25;
     const results: Cidade[] = [];
+    const errors: string[] = [];
     
     for (let i = 0; i < cities.length; i += batchSize) {
         const batch = cities.slice(i, i + batchSize);
-        const { data, error } = await supabase
-            .from('cidades')
-            .upsert(batch, { onConflict: 'id' })
-            .select();
-
-        if (error) {
-            console.error(`Erro no lote ${i / batchSize + 1}:`, error);
-            throw error;
-        }
         
-        if (data) {
-            results.push(...data);
+        try {
+            const { data, error } = await supabase
+                .from('cidades')
+                .upsert(batch, { onConflict: 'id' })
+                .select();
+
+            if (error) {
+                console.error(`Erro no lote ${Math.floor(i / batchSize) + 1}:`, error);
+                console.error('Dados do lote:', JSON.stringify(batch, null, 2));
+                errors.push(`Lote ${Math.floor(i / batchSize) + 1}: ${error.message}`);
+                // Continua para o próximo lote em vez de parar tudo
+                continue;
+            }
+            
+            if (data) {
+                results.push(...data);
+            }
+        } catch (err) {
+            console.error(`Exceção no lote ${Math.floor(i / batchSize) + 1}:`, err);
+            errors.push(`Lote ${Math.floor(i / batchSize) + 1}: Erro inesperado`);
         }
+    }
+    
+    // Se todos os lotes falharam, lança erro
+    if (results.length === 0 && errors.length > 0) {
+        throw new Error(`Falha ao importar: ${errors.join('; ')}`);
+    }
+    
+    // Se alguns lotes falharam mas outros funcionaram, retorna os resultados
+    if (errors.length > 0) {
+        console.warn(`${errors.length} lotes falharam, ${results.length} registros importados`);
     }
     
     return results;
