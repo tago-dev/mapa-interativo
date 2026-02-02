@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { fetchAllCities, upsertCityData } from "@/utils/supabase/city";
+import { fetchAllCities, upsertCityData, bulkUpsertCities } from "@/utils/supabase/city";
 import { Cidade } from "@/types/types";
+import CSVUploadModal from "./components/CSVUploadModal";
 
 type GeoFeature = {
     id?: string | number;
@@ -23,6 +24,12 @@ export default function AdminDashboard() {
     const [filterStatus, setFilterStatus] = useState<"all" | "complete" | "incomplete" | "pending">("all");
     const [filterMesorregiao, setFilterMesorregiao] = useState<string>("all");
     const [registeringIds, setRegisteringIds] = useState<Set<string>>(new Set());
+    const [isCSVModalOpen, setIsCSVModalOpen] = useState(false);
+
+    // Set de IDs de cidades existentes no banco
+    const existingCityIds = useMemo(() => {
+        return new Set(dbCities.map(c => String(c.id)));
+    }, [dbCities]);
 
     const loadData = useCallback(async () => {
         try {
@@ -82,6 +89,14 @@ export default function AdminDashboard() {
                 return newSet;
             });
         }
+    };
+
+    // Função para importar dados do CSV
+    const handleCSVImport = async (cities: Partial<Cidade>[]) => {
+        await bulkUpsertCities(cities);
+        // Recarrega os dados
+        const registered = await fetchAllCities();
+        setDbCities(registered);
     };
 
     // Extrair mesorregiões únicas
@@ -152,12 +167,23 @@ export default function AdminDashboard() {
                         <h1 className="text-2xl font-bold text-slate-800">Painel Administrativo</h1>
                         <p className="text-slate-500 text-sm mt-1">Gerencie os dados das cidades</p>
                     </div>
-                    <Link
-                        href="/app/mapa"
-                        className="text-sm text-slate-600 hover:text-slate-800 transition-colors"
-                    >
-                        ← Voltar ao Mapa
-                    </Link>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setIsCSVModalOpen(true)}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors text-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                            Importar CSV
+                        </button>
+                        <Link
+                            href="/app/mapa"
+                            className="text-sm text-slate-600 hover:text-slate-800 transition-colors"
+                        >
+                            ← Voltar ao Mapa
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Cards de Estatísticas */}
@@ -354,6 +380,14 @@ export default function AdminDashboard() {
                     )}
                 </div>
             </div>
+
+            {/* Modal de Upload CSV */}
+            <CSVUploadModal
+                isOpen={isCSVModalOpen}
+                onClose={() => setIsCSVModalOpen(false)}
+                onImport={handleCSVImport}
+                existingCityIds={existingCityIds}
+            />
         </div>
     );
 }

@@ -53,6 +53,16 @@ export async function upsertCityData(data: Partial<Cidade>) {
     if (error) throw error;
 }
 
+export async function bulkUpsertCities(cities: Partial<Cidade>[]) {
+    const { data, error } = await supabase
+        .from('cidades')
+        .upsert(cities, { onConflict: 'id' })
+        .select();
+
+    if (error) throw error;
+    return data;
+}
+
 // --- Vereadores ---
 
 export async function addVereador(vereador: Omit<Vereador, 'id' | 'created_at'>) {
