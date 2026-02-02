@@ -2,10 +2,11 @@
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { fetchAllCities, upsertCityData, bulkUpsertCities, bulkInsertVereadores } from "@/utils/supabase/city";
+import { fetchAllCities, upsertCityData, bulkUpsertCities, bulkUpdateCities, bulkInsertVereadores, deleteAllVereadores } from "@/utils/supabase/city";
 import { Cidade, Vereador } from "@/types/types";
 import CSVUploadModal from "./components/CSVUploadModal";
 import CSVVereadoresModal from "./components/CSVVereadoresModal";
+import CSVParanaImportModal from "./components/CSVParanaImportModal";
 
 type GeoFeature = {
     id?: string | number;
@@ -27,6 +28,7 @@ export default function AdminDashboard() {
     const [registeringIds, setRegisteringIds] = useState<Set<string>>(new Set());
     const [isCSVModalOpen, setIsCSVModalOpen] = useState(false);
     const [isVereadoresModalOpen, setIsVereadoresModalOpen] = useState(false);
+    const [isParanaModalOpen, setIsParanaModalOpen] = useState(false);
 
     // Set de IDs de cidades existentes no banco
     const existingCityIds = useMemo(() => {
@@ -106,6 +108,79 @@ export default function AdminDashboard() {
         await bulkInsertVereadores(vereadores);
     };
 
+    // Função para importar CSV completo do Paraná (cidades + vereadores)
+    const handleParanaImport = async (
+        cities: Partial<Cidade>[],
+        vereadores: Omit<Vereador, 'id' | 'created_at'>[]
+    ) => {
+        // Primeiro atualiza as cidades (usando UPDATE, não UPSERT)
+        await bulkUpdateCities(cities);
+
+        // Deleta vereadores existentes para evitar duplicatas
+        const confirmDelete = window.confirm(
+            `Foram encontrados ${vereadores.length} vereadores para importar.\n\nDeseja DELETAR todos os vereadores existentes antes de importar os novos?\n\n(Recomendado para evitar duplicatas)`
+        );
+
+        if (confirmDelete) {
+            await deleteAllVereadores();
+        }
+
+        // Insere os novos vereadores
+        await bulkInsertVereadores(vereadores);
+
+        // Recarrega os dados
+        const registered = await fetchAllCities();
+        setDbCities(registered);
+
+        alert(`✅ Importação concluída!\n\n• ${cities.length} cidades atualizadas\n• ${vereadores.length} vereadores importados`);
+    };
+
+    // Função para importar TODAS as cidades do GeoJSON de uma vez
+    const [importingAll, setImportingAll] = useState(false);
+
+    const handleImportAllCities = async () => {
+        if (importingAll) return;
+
+        const pendingCities = geoCities.filter(f => {
+            const id = f.id || f.properties.id;
+            return !existingCityIds.has(String(id));
+        });
+
+        if (pendingCities.length === 0) {
+            alert("Todas as cidades já estão cadastradas!");
+            return;
+        }
+
+        const confirm = window.confirm(
+            `Deseja importar ${pendingCities.length} cidades pendentes?\n\nIsso vai cadastrar todas as cidades que ainda não estão no banco de dados.`
+        );
+
+        if (!confirm) return;
+
+        setImportingAll(true);
+
+        try {
+            const citiesToImport: Partial<Cidade>[] = pendingCities.map(f => ({
+                id: String(f.id || f.properties.id),
+                name: f.properties.name,
+                mesorregiao: f.properties.mesorregiao || undefined,
+            }));
+
+            await bulkUpsertCities(citiesToImport);
+
+            // Recarrega os dados
+            const registered = await fetchAllCities();
+            setDbCities(registered);
+
+            alert(`✅ ${citiesToImport.length} cidades importadas com sucesso!`);
+        } catch (error) {
+            console.error("Erro ao importar cidades:", error);
+            alert("Erro ao importar cidades. Verifique o console.");
+        } finally {
+            setImportingAll(false);
+        }
+    };
+
     // Extrair mesorregiões únicas
     const mesorregioes = useMemo(() => {
         const set = new Set(geoCities.map(f => f.properties.mesorregiao).filter(Boolean));
@@ -174,7 +249,41 @@ export default function AdminDashboard() {
                         <h1 className="text-2xl font-bold text-slate-800">Painel Administrativo</h1>
                         <p className="text-slate-500 text-sm mt-1">Gerencie os dados das cidades</p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
+                        {/* Botão para importar TODAS as cidades pendentes */}
+                        {stats.pending > 0 && (
+                            <button
+                                onClick={handleImportAllCities}
+                                disabled={importingAll}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors text-sm"
+                            >
+                                {importingAll ? (
+                                    <>
+                                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Importando...
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        Importar Todas ({stats.pending})
+                                    </>
+                                )}
+                            </button>
+                        )}
+                        <button
+                            onClick={() => setIsParanaModalOpen(true)}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 text-white font-medium rounded-lg hover:bg-orange-700 transition-colors text-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            CSV Paraná
+                        </button>
                         <button
                             onClick={() => setIsCSVModalOpen(true)}
                             className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors text-sm"
@@ -182,7 +291,7 @@ export default function AdminDashboard() {
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                             </svg>
-                            Importar Cidades
+                            CSV Cidades
                         </button>
                         <button
                             onClick={() => setIsVereadoresModalOpen(true)}
@@ -191,7 +300,7 @@ export default function AdminDashboard() {
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
-                            Importar Vereadores
+                            CSV Vereadores
                         </button>
                         <Link
                             href="/app/mapa"
@@ -410,6 +519,14 @@ export default function AdminDashboard() {
                 isOpen={isVereadoresModalOpen}
                 onClose={() => setIsVereadoresModalOpen(false)}
                 onImport={handleVereadoresImport}
+            />
+
+            {/* Modal de Import CSV Paraná Completo */}
+            <CSVParanaImportModal
+                isOpen={isParanaModalOpen}
+                onClose={() => setIsParanaModalOpen(false)}
+                onImport={handleParanaImport}
+                existingCities={dbCities.map(c => ({ id: String(c.id), name: c.name }))}
             />
         </div>
     );

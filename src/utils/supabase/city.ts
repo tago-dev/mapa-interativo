@@ -98,6 +98,53 @@ export async function bulkUpsertCities(cities: Partial<Cidade>[]) {
     return results;
 }
 
+// Atualiza apenas cidades existentes (não insere novas)
+export async function bulkUpdateCities(cities: Partial<Cidade>[]) {
+    const batchSize = 25;
+    const results: Cidade[] = [];
+    const errors: string[] = [];
+    
+    for (let i = 0; i < cities.length; i += batchSize) {
+        const batch = cities.slice(i, i + batchSize);
+        
+        // Atualizar cada cidade individualmente
+        for (const city of batch) {
+            if (!city.id) continue;
+            
+            try {
+                // Remove o id do objeto para o update
+                const { id, ...updateData } = city;
+                
+                const { data, error } = await supabase
+                    .from('cidades')
+                    .update(updateData)
+                    .eq('id', id)
+                    .select()
+                    .single();
+
+                if (error) {
+                    console.error(`Erro ao atualizar cidade ${id}:`, error);
+                    errors.push(`Cidade ${id}: ${error.message}`);
+                    continue;
+                }
+                
+                if (data) {
+                    results.push(data);
+                }
+            } catch (err) {
+                console.error(`Exceção ao atualizar cidade ${city.id}:`, err);
+                errors.push(`Cidade ${city.id}: Erro inesperado`);
+            }
+        }
+    }
+    
+    if (results.length === 0 && errors.length > 0) {
+        throw new Error(`Falha ao atualizar: ${errors.join('; ')}`);
+    }
+    
+    return results;
+}
+
 // --- Vereadores ---
 
 export async function addVereador(vereador: Omit<Vereador, 'id' | 'created_at'>) {
@@ -153,6 +200,15 @@ export async function deleteAllVereadoresByCidade(cidadeId: string) {
         .from('vereadores')
         .delete()
         .eq('cidade_id', cidadeId);
+
+    if (error) throw error;
+}
+
+export async function deleteAllVereadores() {
+    const { error } = await supabase
+        .from('vereadores')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Deleta todos (workaround)
 
     if (error) throw error;
 }
