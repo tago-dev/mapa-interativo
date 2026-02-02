@@ -2,9 +2,10 @@
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { fetchAllCities, upsertCityData, bulkUpsertCities } from "@/utils/supabase/city";
-import { Cidade } from "@/types/types";
+import { fetchAllCities, upsertCityData, bulkUpsertCities, bulkInsertVereadores } from "@/utils/supabase/city";
+import { Cidade, Vereador } from "@/types/types";
 import CSVUploadModal from "./components/CSVUploadModal";
+import CSVVereadoresModal from "./components/CSVVereadoresModal";
 
 type GeoFeature = {
     id?: string | number;
@@ -25,6 +26,7 @@ export default function AdminDashboard() {
     const [filterMesorregiao, setFilterMesorregiao] = useState<string>("all");
     const [registeringIds, setRegisteringIds] = useState<Set<string>>(new Set());
     const [isCSVModalOpen, setIsCSVModalOpen] = useState(false);
+    const [isVereadoresModalOpen, setIsVereadoresModalOpen] = useState(false);
 
     // Set de IDs de cidades existentes no banco
     const existingCityIds = useMemo(() => {
@@ -97,6 +99,11 @@ export default function AdminDashboard() {
         // Recarrega os dados
         const registered = await fetchAllCities();
         setDbCities(registered);
+    };
+
+    // Função para importar vereadores do CSV
+    const handleVereadoresImport = async (vereadores: Omit<Vereador, 'id' | 'created_at'>[]) => {
+        await bulkInsertVereadores(vereadores);
     };
 
     // Extrair mesorregiões únicas
@@ -175,7 +182,16 @@ export default function AdminDashboard() {
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                             </svg>
-                            Importar CSV
+                            Importar Cidades
+                        </button>
+                        <button
+                            onClick={() => setIsVereadoresModalOpen(true)}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors text-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            Importar Vereadores
                         </button>
                         <Link
                             href="/app/mapa"
@@ -387,6 +403,13 @@ export default function AdminDashboard() {
                 onClose={() => setIsCSVModalOpen(false)}
                 onImport={handleCSVImport}
                 existingCityIds={existingCityIds}
+            />
+
+            {/* Modal de Upload Vereadores */}
+            <CSVVereadoresModal
+                isOpen={isVereadoresModalOpen}
+                onClose={() => setIsVereadoresModalOpen(false)}
+                onImport={handleVereadoresImport}
             />
         </div>
     );

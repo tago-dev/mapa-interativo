@@ -111,6 +111,52 @@ export async function addVereador(vereador: Omit<Vereador, 'id' | 'created_at'>)
     return data;
 }
 
+export async function bulkInsertVereadores(vereadores: Omit<Vereador, 'id' | 'created_at'>[]) {
+    // Processa em lotes de 50 para evitar timeout
+    const batchSize = 50;
+    const results: Vereador[] = [];
+    const errors: string[] = [];
+    
+    for (let i = 0; i < vereadores.length; i += batchSize) {
+        const batch = vereadores.slice(i, i + batchSize);
+        
+        try {
+            const { data, error } = await supabase
+                .from('vereadores')
+                .insert(batch)
+                .select();
+
+            if (error) {
+                console.error(`Erro no lote ${Math.floor(i / batchSize) + 1}:`, error);
+                errors.push(`Lote ${Math.floor(i / batchSize) + 1}: ${error.message}`);
+                continue;
+            }
+            
+            if (data) {
+                results.push(...data);
+            }
+        } catch (err) {
+            console.error(`Exceção no lote ${Math.floor(i / batchSize) + 1}:`, err);
+            errors.push(`Lote ${Math.floor(i / batchSize) + 1}: Erro inesperado`);
+        }
+    }
+    
+    if (results.length === 0 && errors.length > 0) {
+        throw new Error(`Falha ao importar: ${errors.join('; ')}`);
+    }
+    
+    return results;
+}
+
+export async function deleteAllVereadoresByCidade(cidadeId: string) {
+    const { error } = await supabase
+        .from('vereadores')
+        .delete()
+        .eq('cidade_id', cidadeId);
+
+    if (error) throw error;
+}
+
 export async function updateVereador(id: string, data: Partial<Vereador>) {
     const { error } = await supabase
         .from('vereadores')
