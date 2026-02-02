@@ -54,13 +54,28 @@ export async function upsertCityData(data: Partial<Cidade>) {
 }
 
 export async function bulkUpsertCities(cities: Partial<Cidade>[]) {
-    const { data, error } = await supabase
-        .from('cidades')
-        .upsert(cities, { onConflict: 'id' })
-        .select();
+    // Processa em lotes de 50 para evitar timeout
+    const batchSize = 50;
+    const results: Cidade[] = [];
+    
+    for (let i = 0; i < cities.length; i += batchSize) {
+        const batch = cities.slice(i, i + batchSize);
+        const { data, error } = await supabase
+            .from('cidades')
+            .upsert(batch, { onConflict: 'id' })
+            .select();
 
-    if (error) throw error;
-    return data;
+        if (error) {
+            console.error(`Erro no lote ${i / batchSize + 1}:`, error);
+            throw error;
+        }
+        
+        if (data) {
+            results.push(...data);
+        }
+    }
+    
+    return results;
 }
 
 // --- Vereadores ---

@@ -12,30 +12,48 @@ interface CSVUploadModalProps {
 
 // Mapeamento de colunas do CSV para campos da Cidade
 const CSV_COLUMN_MAP: Record<string, keyof Cidade> = {
+    // ID
     'id': 'id',
     'codigo': 'id',
     'cod_ibge': 'id',
+    // Nome
     'name': 'name',
     'nome': 'name',
     'cidade': 'name',
+    'municipio': 'name',
+    'município': 'name',
+    // Mesorregião
     'mesorregiao': 'mesorregiao',
     'mesorregião': 'mesorregiao',
     'regiao': 'mesorregiao',
+    'região': 'mesorregiao',
+    // Eleitores
     'eleitores': 'eleitores',
     'num_eleitores': 'eleitores',
+    // Prefeito
     'prefeito': 'prefeito',
     'nome_prefeito': 'prefeito',
+    // Partido
     'partido': 'partido',
     'partido_prefeito': 'partido',
+    // Status prefeito
     'status_prefeito': 'status_prefeito',
+    // Total votos
     'total_votos': 'total_votos',
     'votos': 'total_votos',
+    // Vice
     'vice_prefeito': 'vice_prefeito',
     'vice': 'vice_prefeito',
+    // Partido vice
     'partido_vice': 'partido_vice',
+    // Status vice
     'status_vice': 'status_vice',
+    // Apoio
     'apoio': 'apoio',
     'nao_apoio': 'nao_apoio',
+    // Timestamps (ignorar na importação, mas reconhecer)
+    'created_at': 'created_at',
+    'updated_at': 'updated_at',
 };
 
 const FIELD_LABELS: Record<keyof Cidade, string> = {
@@ -114,12 +132,14 @@ export default function CSVUploadModal({ isOpen, onClose, onImport, existingCity
 
     const mapCSVToCity = (headers: string[], row: string[]): Partial<Cidade> | null => {
         const city: Partial<Cidade> = {};
-        const erros: string[] = [];
 
         headers.forEach((header, index) => {
             const field = CSV_COLUMN_MAP[header];
-            if (field && row[index] !== undefined && row[index] !== '') {
+            // Ignora campos de timestamp - são gerenciados pelo banco
+            if (field && field !== 'created_at' && field !== 'updated_at' && row[index] !== undefined && row[index] !== '') {
                 const value = row[index].replace(/^["']|["']$/g, '').trim();
+
+                if (!value) return; // Ignora valores vazios
 
                 // Converte campos numéricos
                 if (['eleitores', 'total_votos', 'apoio', 'nao_apoio'].includes(field)) {
@@ -236,13 +256,15 @@ export default function CSVUploadModal({ isOpen, onClose, onImport, existingCity
 
     const handleImport = async () => {
         setStep('importing');
+        setErrors([]);
         try {
             await onImport(parsedData);
             setStep('success');
-        } catch (err) {
-            setErrors(['Erro ao importar dados. Tente novamente.']);
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
+            console.error('Erro ao importar:', err);
+            setErrors([`Erro ao importar dados: ${errorMessage}`]);
             setStep('preview');
-            console.error(err);
         }
     };
 
@@ -302,8 +324,8 @@ export default function CSVUploadModal({ isOpen, onClose, onImport, existingCity
                                 onDrop={handleDrop}
                                 onClick={() => fileInputRef.current?.click()}
                                 className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all ${dragActive
-                                        ? 'border-blue-500 bg-blue-50'
-                                        : 'border-slate-300 hover:border-slate-400 hover:bg-slate-50'
+                                    ? 'border-blue-500 bg-blue-50'
+                                    : 'border-slate-300 hover:border-slate-400 hover:bg-slate-50'
                                     }`}
                             >
                                 <input
