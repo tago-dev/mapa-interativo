@@ -229,8 +229,11 @@ export default function CidadePage() {
                                 <div key={imp.id || idx} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0">
                                     <div>
                                         <span className="text-sm text-slate-700">{imp.nome}</span>
-                                        {imp.contato && (
-                                            <p className="text-xs text-slate-400 mt-0.5">{imp.contato}</p>
+                                        {imp.responsavel && (
+                                            <p className="text-xs text-slate-400 mt-0.5">{imp.responsavel}</p>
+                                        )}
+                                        {imp.telefone && (
+                                            <p className="text-xs text-slate-400">{imp.telefone}</p>
                                         )}
                                     </div>
                                     {imp.tipo && (
