@@ -529,35 +529,35 @@ export default function AdminDashboard() {
             </div>
 
             {/* Modal de Upload CSV */}
-            <CSVUploadModal
+            {/* <CSVUploadModal
                 isOpen={isCSVModalOpen}
                 onClose={() => setIsCSVModalOpen(false)}
                 onImport={handleCSVImport}
                 existingCityIds={existingCityIds}
-            />
+            /> */}
 
             {/* Modal de Upload Vereadores */}
-            <CSVVereadoresModal
+            {/* <CSVVereadoresModal
                 isOpen={isVereadoresModalOpen}
                 onClose={() => setIsVereadoresModalOpen(false)}
                 onImport={handleVereadoresImport}
-            />
+            /> */}
 
             {/* Modal de Import CSV Paraná Completo */}
-            <CSVParanaImportModal
+            {/* <CSVParanaImportModal
                 isOpen={isParanaModalOpen}
                 onClose={() => setIsParanaModalOpen(false)}
                 onImport={handleParanaImport}
                 existingCities={dbCities.map(c => ({ id: String(c.id), name: c.name }))}
-            />
+            /> */}
 
             {/* Modal de Import Total de Eleitores */}
-            <CSVEleitoresImportModal
+            {/* <CSVEleitoresImportModal
                 isOpen={isEleitoresModalOpen}
                 onClose={() => setIsEleitoresModalOpen(false)}
                 onImport={handleEleitoresImport}
                 existingCities={dbCities.map(c => ({ id: String(c.id), name: c.name, prefeito: c.prefeito }))}
-            />
+            /> */}
         </div>
     );
 }
