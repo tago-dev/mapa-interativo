@@ -16,6 +16,9 @@ import {
     addImprensa,
     deleteImprensa
 } from "@/utils/supabase/city";
+import CooperativaModal from "../../components/CooperativaModal";
+import EmpresarioModal from "../../components/EmpresarioModal";
+import ImprensaModal from "../../components/ImprensaModal";
 
 export default function AdminCidadePage() {
     const params = useParams();
@@ -42,9 +45,11 @@ export default function AdminCidadePage() {
 
     // Estados para inputs de novos itens
     const [newVereador, setNewVereador] = useState({ nome: "", partido: "" });
-    const [newCooperativa, setNewCooperativa] = useState({ nome: "" });
-    const [newEmpresario, setNewEmpresario] = useState({ nome: "" });
-    const [newImprensa, setNewImprensa] = useState({ nome: "", tipo: "" });
+
+    // Estados para modais
+    const [showCooperativaModal, setShowCooperativaModal] = useState(false);
+    const [showEmpresarioModal, setShowEmpresarioModal] = useState(false);
+    const [showImprensaModal, setShowImprensaModal] = useState(false);
 
     const loadData = useCallback(async () => {
         if (!id) return;
@@ -195,14 +200,25 @@ export default function AdminCidadePage() {
     };
 
     // --- Handlers para Cooperativas ---
-    const handleAddCooperativa = async () => {
-        if (!cidade || !newCooperativa.nome.trim()) return;
+    const handleAddCooperativa = async (data: {
+        nome: string;
+        responsavel: string;
+        telefone: string;
+        email: string;
+        endereco: string;
+        observacoes: string;
+    }) => {
+        if (!cidade) return;
         try {
             await addCooperativa({
                 cidade_id: cidade.id,
-                nome: newCooperativa.nome.trim()
+                nome: data.nome.trim(),
+                responsavel: data.responsavel.trim() || undefined,
+                telefone: data.telefone.trim() || undefined,
+                email: data.email.trim() || undefined,
+                endereco: data.endereco.trim() || undefined,
+                observacoes: data.observacoes.trim() || undefined,
             });
-            setNewCooperativa({ nome: "" });
             loadData();
         } catch (error) {
             console.error(error);
@@ -221,14 +237,29 @@ export default function AdminCidadePage() {
     };
 
     // --- Handlers para Empresários ---
-    const handleAddEmpresario = async () => {
-        if (!cidade || !newEmpresario.nome.trim()) return;
+    const handleAddEmpresario = async (data: {
+        nome: string;
+        responsavel: string;
+        telefone: string;
+        email: string;
+        empresa: string;
+        segmento: string;
+        endereco: string;
+        observacoes: string;
+    }) => {
+        if (!cidade) return;
         try {
             await addEmpresario({
                 cidade_id: cidade.id,
-                nome: newEmpresario.nome.trim()
+                nome: data.nome.trim(),
+                responsavel: data.responsavel.trim() || undefined,
+                telefone: data.telefone.trim() || undefined,
+                email: data.email.trim() || undefined,
+                empresa: data.empresa.trim() || undefined,
+                segmento: data.segmento.trim() || undefined,
+                endereco: data.endereco.trim() || undefined,
+                observacoes: data.observacoes.trim() || undefined,
             });
-            setNewEmpresario({ nome: "" });
             loadData();
         } catch (error) {
             console.error(error);
@@ -247,15 +278,29 @@ export default function AdminCidadePage() {
     };
 
     // --- Handlers para Imprensa ---
-    const handleAddImprensa = async () => {
-        if (!cidade || !newImprensa.nome.trim()) return;
+    const handleAddImprensa = async (data: {
+        nome: string;
+        tipo: string;
+        responsavel: string;
+        telefone: string;
+        email: string;
+        endereco: string;
+        website: string;
+        observacoes: string;
+    }) => {
+        if (!cidade) return;
         try {
             await addImprensa({
                 cidade_id: cidade.id,
-                nome: newImprensa.nome.trim(),
-                tipo: newImprensa.tipo.trim() || undefined
+                nome: data.nome.trim(),
+                tipo: data.tipo.trim() || undefined,
+                responsavel: data.responsavel.trim() || undefined,
+                telefone: data.telefone.trim() || undefined,
+                email: data.email.trim() || undefined,
+                endereco: data.endereco.trim() || undefined,
+                website: data.website.trim() || undefined,
+                observacoes: data.observacoes.trim() || undefined,
             });
-            setNewImprensa({ nome: "", tipo: "" });
             loadData();
         } catch (error) {
             console.error(error);
@@ -586,7 +631,15 @@ export default function AdminCidadePage() {
                             )}
                             {cidade.cooperativas?.map((coop) => (
                                 <li key={coop.id} className="flex justify-between items-center bg-slate-50 p-3 rounded-lg group hover:bg-slate-100 transition-colors">
-                                    <span className="text-slate-800 text-sm font-medium">{coop.nome}</span>
+                                    <div>
+                                        <span className="text-slate-800 text-sm font-medium">{coop.nome}</span>
+                                        {coop.responsavel && (
+                                            <span className="ml-2 text-slate-500 text-xs">({coop.responsavel})</span>
+                                        )}
+                                        {coop.telefone && (
+                                            <span className="block text-slate-400 text-xs mt-0.5">{coop.telefone}</span>
+                                        )}
+                                    </div>
                                     <button
                                         onClick={() => handleDeleteCooperativa(coop.id)}
                                         className="text-red-500 hover:text-red-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
@@ -598,22 +651,13 @@ export default function AdminCidadePage() {
                         </ul>
 
                         <div className="border-t border-slate-100 pt-4">
-                            <div className="flex gap-2">
-                                <input
-                                    placeholder="Nome da Cooperativa"
-                                    value={newCooperativa.nome}
-                                    onChange={(e) => setNewCooperativa({ nome: e.target.value })}
-                                    onKeyDown={(e) => e.key === "Enter" && handleAddCooperativa()}
-                                    className="flex-1 border border-slate-200 p-2 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                                />
-                                <button
-                                    onClick={handleAddCooperativa}
-                                    disabled={!newCooperativa.nome.trim()}
-                                    className="bg-slate-800 text-white px-3 rounded-lg hover:bg-slate-700 text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    +
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => setShowCooperativaModal(true)}
+                                className="w-full bg-slate-800 text-white py-2.5 rounded-lg hover:bg-slate-700 text-sm font-medium transition-all flex items-center justify-center gap-2"
+                            >
+                                <span className="text-lg">+</span>
+                                Adicionar Cooperativa
+                            </button>
                         </div>
                     </div>
 
@@ -634,7 +678,20 @@ export default function AdminCidadePage() {
                             )}
                             {cidade.empresarios?.map((emp) => (
                                 <li key={emp.id} className="flex justify-between items-center bg-slate-50 p-3 rounded-lg group hover:bg-slate-100 transition-colors">
-                                    <span className="text-slate-800 text-sm font-medium">{emp.nome}</span>
+                                    <div>
+                                        <span className="text-slate-800 text-sm font-medium">{emp.nome}</span>
+                                        {emp.empresa && (
+                                            <span className="ml-2 text-slate-500 text-xs">({emp.empresa})</span>
+                                        )}
+                                        {emp.segmento && (
+                                            <span className="ml-1 text-xs text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
+                                                {emp.segmento}
+                                            </span>
+                                        )}
+                                        {emp.telefone && (
+                                            <span className="block text-slate-400 text-xs mt-0.5">{emp.telefone}</span>
+                                        )}
+                                    </div>
                                     <button
                                         onClick={() => handleDeleteEmpresario(emp.id)}
                                         className="text-red-500 hover:text-red-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
@@ -646,22 +703,13 @@ export default function AdminCidadePage() {
                         </ul>
 
                         <div className="border-t border-slate-100 pt-4">
-                            <div className="flex gap-2">
-                                <input
-                                    placeholder="Nome do Empresário"
-                                    value={newEmpresario.nome}
-                                    onChange={(e) => setNewEmpresario({ nome: e.target.value })}
-                                    onKeyDown={(e) => e.key === "Enter" && handleAddEmpresario()}
-                                    className="flex-1 border border-slate-200 p-2 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                                />
-                                <button
-                                    onClick={handleAddEmpresario}
-                                    disabled={!newEmpresario.nome.trim()}
-                                    className="bg-slate-800 text-white px-3 rounded-lg hover:bg-slate-700 text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    +
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => setShowEmpresarioModal(true)}
+                                className="w-full bg-slate-800 text-white py-2.5 rounded-lg hover:bg-slate-700 text-sm font-medium transition-all flex items-center justify-center gap-2"
+                            >
+                                <span className="text-lg">+</span>
+                                Adicionar Empresário
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -685,59 +733,63 @@ export default function AdminCidadePage() {
                             </div>
                         )}
                         {cidade.imprensa?.map((imp) => (
-                            <div key={imp.id} className="flex justify-between items-center bg-slate-50 p-3 rounded-lg group hover:bg-slate-100 transition-colors">
-                                <div>
-                                    <span className="text-slate-800 text-sm font-medium">{imp.nome}</span>
-                                    {imp.tipo && (
-                                        <span className="ml-2 text-xs text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">
-                                            {imp.tipo}
-                                        </span>
-                                    )}
+                            <div key={imp.id} className="bg-slate-50 p-3 rounded-lg group hover:bg-slate-100 transition-colors">
+                                <div className="flex justify-between items-start">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <span className="text-slate-800 text-sm font-medium">{imp.nome}</span>
+                                            {imp.tipo && (
+                                                <span className="text-xs text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">
+                                                    {imp.tipo}
+                                                </span>
+                                            )}
+                                        </div>
+                                        {imp.responsavel && (
+                                            <p className="text-slate-500 text-xs mt-1">{imp.responsavel}</p>
+                                        )}
+                                        {imp.telefone && (
+                                            <p className="text-slate-400 text-xs">{imp.telefone}</p>
+                                        )}
+                                    </div>
+                                    <button
+                                        onClick={() => handleDeleteImprensa(imp.id)}
+                                        className="text-red-500 hover:text-red-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity ml-2"
+                                    >
+                                        Remover
+                                    </button>
                                 </div>
-                                <button
-                                    onClick={() => handleDeleteImprensa(imp.id)}
-                                    className="text-red-500 hover:text-red-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    Remover
-                                </button>
                             </div>
                         ))}
                     </div>
 
                     <div className="border-t border-slate-100 pt-4">
-                        <div className="flex gap-2">
-                            <input
-                                placeholder="Nome do veículo (ex: Rádio Cidade FM)"
-                                value={newImprensa.nome}
-                                onChange={(e) => setNewImprensa({ ...newImprensa, nome: e.target.value })}
-                                onKeyDown={(e) => e.key === "Enter" && handleAddImprensa()}
-                                className="flex-1 border border-slate-200 p-2 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                            />
-                            <select
-                                value={newImprensa.tipo}
-                                onChange={(e) => setNewImprensa({ ...newImprensa, tipo: e.target.value })}
-                                className="w-32 border border-slate-200 p-2 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
-                            >
-                                <option value="">Tipo...</option>
-                                <option value="Rádio">Rádio</option>
-                                <option value="TV">TV</option>
-                                <option value="Jornal">Jornal</option>
-                                <option value="Portal">Portal</option>
-                                <option value="Revista">Revista</option>
-                                <option value="Podcast">Podcast</option>
-                                <option value="Outro">Outro</option>
-                            </select>
-                            <button
-                                onClick={handleAddImprensa}
-                                disabled={!newImprensa.nome.trim()}
-                                className="bg-slate-800 text-white px-4 rounded-lg hover:bg-slate-700 text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                + Adicionar
-                            </button>
-                        </div>
+                        <button
+                            onClick={() => setShowImprensaModal(true)}
+                            className="w-full sm:w-auto bg-orange-600 text-white py-2.5 px-6 rounded-lg hover:bg-orange-700 text-sm font-medium transition-all flex items-center justify-center gap-2"
+                        >
+                            <span className="text-lg">+</span>
+                            Adicionar Veículo de Imprensa
+                        </button>
                     </div>
                 </div>
             </div>
+
+            {/* Modais */}
+            <CooperativaModal
+                isOpen={showCooperativaModal}
+                onClose={() => setShowCooperativaModal(false)}
+                onSubmit={handleAddCooperativa}
+            />
+            <EmpresarioModal
+                isOpen={showEmpresarioModal}
+                onClose={() => setShowEmpresarioModal(false)}
+                onSubmit={handleAddEmpresario}
+            />
+            <ImprensaModal
+                isOpen={showImprensaModal}
+                onClose={() => setShowImprensaModal(false)}
+                onSubmit={handleAddImprensa}
+            />
         </div>
     );
 }

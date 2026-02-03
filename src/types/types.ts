@@ -28,6 +28,11 @@ export interface Cooperativa {
     id: string;
     cidade_id: string;
     nome: string;
+    responsavel?: string;
+    telefone?: string;
+    email?: string;
+    endereco?: string;
+    observacoes?: string;
     created_at?: string;
 }
 
@@ -35,6 +40,13 @@ export interface Empresario {
     id: string;
     cidade_id: string;
     nome: string;
+    responsavel?: string;
+    telefone?: string;
+    email?: string;
+    empresa?: string;
+    segmento?: string;
+    endereco?: string;
+    observacoes?: string;
     created_at?: string;
 }
 
@@ -43,7 +55,12 @@ export interface Imprensa {
     cidade_id: string;
     nome: string;
     tipo?: string; // jornal, rádio, tv, portal, etc.
-    contato?: string;
+    responsavel?: string;
+    telefone?: string;
+    email?: string;
+    endereco?: string;
+    website?: string;
+    observacoes?: string;
     created_at?: string;
 }
 
