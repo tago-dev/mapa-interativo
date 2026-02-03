@@ -4,8 +4,11 @@ import { useRouter } from "next/navigation";
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
-import { fetchAllCities } from "@/utils/supabase/city";
-import { Cidade } from "@/types/types";
+
+type CidadeStatus = {
+    id: string;
+    status_prefeito: string | null;
+};
 
 type GeoFeatureProps = {
     name: string;
@@ -52,7 +55,7 @@ export default function MapaBrasil() {
     const router = useRouter();
     const [geoData, setGeoData] = useState<Record<string, unknown> | null>(null);
     const [hoveredCity, setHoveredCity] = useState<string | null>(null);
-    const [cidadesData, setCidadesData] = useState<Cidade[]>([]);
+    const [cidadesData, setCidadesData] = useState<CidadeStatus[]>([]);
 
     // Criar um Map para lookup rápido do status por ID da cidade
     const statusMap = useMemo(() => {
@@ -80,10 +83,14 @@ export default function MapaBrasil() {
         Promise.all([
             fetch("/data/municipios.json")
                 .then((res) => {
-                    if (!res.ok) throw new Error("Falha ao carregar dados");
+                    if (!res.ok) throw new Error("Falha ao carregar dados geográficos");
                     return res.json();
                 }),
-            fetchAllCities()
+            fetch("/api/cidades")
+                .then((res) => {
+                    if (!res.ok) throw new Error("Falha ao carregar dados das cidades");
+                    return res.json();
+                })
         ])
             .then(([geoJson, cidades]) => {
                 setGeoData(geoJson);

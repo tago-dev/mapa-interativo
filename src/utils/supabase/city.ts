@@ -1,7 +1,12 @@
-import { supabase } from './client';
+import { createClient } from './client';
 import { Cidade, CidadeCompleta, Vereador, Cooperativa, Empresario, Imprensa } from '@/types/types';
 
+// Helper para obter cliente Supabase
+const getSupabase = () => createClient();
+
 export async function fetchCityData(id: string): Promise<CidadeCompleta | null> {
+    const supabase = getSupabase();
+    
     // Busca dados da cidade
     const { data: cidade, error: cidadeError } = await supabase
         .from('cidades')
@@ -34,6 +39,7 @@ export async function fetchCityData(id: string): Promise<CidadeCompleta | null> 
 }
 
 export async function fetchAllCities(): Promise<Cidade[]> {
+    const supabase = getSupabase();
     const { data, error } = await supabase
         .from('cidades')
         .select('*');
@@ -46,6 +52,7 @@ export async function fetchAllCities(): Promise<Cidade[]> {
 }
 
 export async function upsertCityData(data: Partial<Cidade>) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('cidades')
         .upsert(data, { onConflict: 'id' });
@@ -54,6 +61,7 @@ export async function upsertCityData(data: Partial<Cidade>) {
 }
 
 export async function bulkUpsertCities(cities: Partial<Cidade>[]) {
+    const supabase = getSupabase();
     // Processa em lotes de 25 para evitar timeout
     const batchSize = 25;
     const results: Cidade[] = [];
@@ -100,6 +108,7 @@ export async function bulkUpsertCities(cities: Partial<Cidade>[]) {
 
 // Atualiza apenas cidades existentes (não insere novas)
 export async function bulkUpdateCities(cities: Partial<Cidade>[]) {
+    const supabase = getSupabase();
     const batchSize = 25;
     const results: Cidade[] = [];
     const errors: string[] = [];
@@ -148,6 +157,7 @@ export async function bulkUpdateCities(cities: Partial<Cidade>[]) {
 // --- Vereadores ---
 
 export async function addVereador(vereador: Omit<Vereador, 'id' | 'created_at'>) {
+    const supabase = getSupabase();
     const { data, error } = await supabase
         .from('vereadores')
         .insert(vereador)
@@ -159,6 +169,7 @@ export async function addVereador(vereador: Omit<Vereador, 'id' | 'created_at'>)
 }
 
 export async function bulkInsertVereadores(vereadores: Omit<Vereador, 'id' | 'created_at'>[]) {
+    const supabase = getSupabase();
     // Processa em lotes de 50 para evitar timeout
     const batchSize = 50;
     const results: Vereador[] = [];
@@ -196,6 +207,7 @@ export async function bulkInsertVereadores(vereadores: Omit<Vereador, 'id' | 'cr
 }
 
 export async function deleteAllVereadoresByCidade(cidadeId: string) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('vereadores')
         .delete()
@@ -205,6 +217,7 @@ export async function deleteAllVereadoresByCidade(cidadeId: string) {
 }
 
 export async function deleteAllVereadores() {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('vereadores')
         .delete()
@@ -214,6 +227,7 @@ export async function deleteAllVereadores() {
 }
 
 export async function updateVereador(id: string, data: Partial<Vereador>) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('vereadores')
         .update(data)
@@ -223,6 +237,7 @@ export async function updateVereador(id: string, data: Partial<Vereador>) {
 }
 
 export async function deleteVereador(id: string) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('vereadores')
         .delete()
@@ -234,6 +249,7 @@ export async function deleteVereador(id: string) {
 // --- Cooperativas ---
 
 export async function addCooperativa(cooperativa: Omit<Cooperativa, 'id' | 'created_at'>) {
+    const supabase = getSupabase();
     const { data, error } = await supabase
         .from('cooperativas')
         .insert(cooperativa)
@@ -245,6 +261,7 @@ export async function addCooperativa(cooperativa: Omit<Cooperativa, 'id' | 'crea
 }
 
 export async function updateCooperativa(id: string, data: Partial<Cooperativa>) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('cooperativas')
         .update(data)
@@ -254,6 +271,7 @@ export async function updateCooperativa(id: string, data: Partial<Cooperativa>) 
 }
 
 export async function deleteCooperativa(id: string) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('cooperativas')
         .delete()
@@ -265,6 +283,7 @@ export async function deleteCooperativa(id: string) {
 // --- Empresarios ---
 
 export async function addEmpresario(empresario: Omit<Empresario, 'id' | 'created_at'>) {
+    const supabase = getSupabase();
     const { data, error } = await supabase
         .from('empresarios')
         .insert(empresario)
@@ -276,6 +295,7 @@ export async function addEmpresario(empresario: Omit<Empresario, 'id' | 'created
 }
 
 export async function updateEmpresario(id: string, data: Partial<Empresario>) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('empresarios')
         .update(data)
@@ -285,6 +305,7 @@ export async function updateEmpresario(id: string, data: Partial<Empresario>) {
 }
 
 export async function deleteEmpresario(id: string) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('empresarios')
         .delete()
@@ -296,6 +317,7 @@ export async function deleteEmpresario(id: string) {
 // --- Imprensa ---
 
 export async function addImprensa(imprensa: Omit<Imprensa, 'id' | 'created_at'>) {
+    const supabase = getSupabase();
     const { data, error } = await supabase
         .from('imprensa')
         .insert(imprensa)
@@ -307,6 +329,7 @@ export async function addImprensa(imprensa: Omit<Imprensa, 'id' | 'created_at'>)
 }
 
 export async function updateImprensa(id: string, data: Partial<Imprensa>) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('imprensa')
         .update(data)
@@ -316,6 +339,7 @@ export async function updateImprensa(id: string, data: Partial<Imprensa>) {
 }
 
 export async function deleteImprensa(id: string) {
+    const supabase = getSupabase();
     const { error } = await supabase
         .from('imprensa')
         .delete()
