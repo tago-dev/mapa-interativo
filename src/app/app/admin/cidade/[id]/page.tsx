@@ -14,11 +14,13 @@ import {
     addEmpresario,
     deleteEmpresario,
     addImprensa,
-    deleteImprensa
+    deleteImprensa,
+    updateImprensa
 } from "@/utils/supabase/city";
 import CooperativaModal from "../../components/CooperativaModal";
 import EmpresarioModal from "../../components/EmpresarioModal";
 import ImprensaModal from "../../components/ImprensaModal";
+import { Imprensa } from "@/types/types";
 
 export default function AdminCidadePage() {
     const params = useParams();
@@ -50,6 +52,7 @@ export default function AdminCidadePage() {
     const [showCooperativaModal, setShowCooperativaModal] = useState(false);
     const [showEmpresarioModal, setShowEmpresarioModal] = useState(false);
     const [showImprensaModal, setShowImprensaModal] = useState(false);
+    const [editingImprensa, setEditingImprensa] = useState<Imprensa | null>(null);
 
     const loadData = useCallback(async () => {
         if (!id) return;
@@ -290,22 +293,48 @@ export default function AdminCidadePage() {
     }) => {
         if (!cidade) return;
         try {
-            await addImprensa({
-                cidade_id: cidade.id,
-                nome: data.nome.trim(),
-                tipo: data.tipo.trim() || undefined,
-                responsavel: data.responsavel.trim() || undefined,
-                telefone: data.telefone.trim() || undefined,
-                email: data.email.trim() || undefined,
-                endereco: data.endereco.trim() || undefined,
-                website: data.website.trim() || undefined,
-                observacoes: data.observacoes.trim() || undefined,
-            });
+            if (editingImprensa) {
+                // Modo edição
+                await updateImprensa(editingImprensa.id, {
+                    nome: data.nome.trim(),
+                    tipo: data.tipo.trim() || undefined,
+                    responsavel: data.responsavel.trim() || undefined,
+                    telefone: data.telefone.trim() || undefined,
+                    email: data.email.trim() || undefined,
+                    endereco: data.endereco.trim() || undefined,
+                    website: data.website.trim() || undefined,
+                    observacoes: data.observacoes.trim() || undefined,
+                });
+                setEditingImprensa(null);
+            } else {
+                // Modo adição
+                await addImprensa({
+                    cidade_id: cidade.id,
+                    nome: data.nome.trim(),
+                    tipo: data.tipo.trim() || undefined,
+                    responsavel: data.responsavel.trim() || undefined,
+                    telefone: data.telefone.trim() || undefined,
+                    email: data.email.trim() || undefined,
+                    endereco: data.endereco.trim() || undefined,
+                    website: data.website.trim() || undefined,
+                    observacoes: data.observacoes.trim() || undefined,
+                });
+            }
             loadData();
         } catch (error) {
             console.error(error);
-            alert("Erro ao adicionar imprensa");
+            alert(editingImprensa ? "Erro ao atualizar imprensa" : "Erro ao adicionar imprensa");
         }
+    };
+
+    const handleEditImprensa = (imprensa: Imprensa) => {
+        setEditingImprensa(imprensa);
+        setShowImprensaModal(true);
+    };
+
+    const handleCloseImprensaModal = () => {
+        setShowImprensaModal(false);
+        setEditingImprensa(null);
     };
 
     const handleDeleteImprensa = async (imprensaId: string) => {
@@ -751,12 +780,20 @@ export default function AdminCidadePage() {
                                             <p className="text-slate-400 text-xs">{imp.telefone}</p>
                                         )}
                                     </div>
-                                    <button
-                                        onClick={() => handleDeleteImprensa(imp.id)}
-                                        className="text-red-500 hover:text-red-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity ml-2"
-                                    >
-                                        Remover
-                                    </button>
+                                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
+                                        <button
+                                            onClick={() => handleEditImprensa(imp)}
+                                            className="text-blue-500 hover:text-blue-600 text-xs"
+                                        >
+                                            Editar
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteImprensa(imp.id)}
+                                            className="text-red-500 hover:text-red-600 text-xs"
+                                        >
+                                            Remover
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -787,8 +824,9 @@ export default function AdminCidadePage() {
             />
             <ImprensaModal
                 isOpen={showImprensaModal}
-                onClose={() => setShowImprensaModal(false)}
+                onClose={handleCloseImprensaModal}
                 onSubmit={handleAddImprensa}
+                editingImprensa={editingImprensa}
             />
         </div>
     );

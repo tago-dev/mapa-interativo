@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Imprensa } from "@/types/types";
 
 interface ImprensaFormData {
     nome: string;
@@ -17,9 +18,10 @@ interface ImprensaModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (data: ImprensaFormData) => Promise<void>;
+    editingImprensa?: Imprensa | null;
 }
 
-export default function ImprensaModal({ isOpen, onClose, onSubmit }: ImprensaModalProps) {
+export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImprensa }: ImprensaModalProps) {
     const [formData, setFormData] = useState<ImprensaFormData>({
         nome: "",
         tipo: "",
@@ -31,6 +33,35 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit }: ImprensaMod
         observacoes: "",
     });
     const [saving, setSaving] = useState(false);
+
+    const isEditing = !!editingImprensa;
+
+    // Preencher formulário quando estiver editando
+    useEffect(() => {
+        if (editingImprensa) {
+            setFormData({
+                nome: editingImprensa.nome || "",
+                tipo: editingImprensa.tipo || "",
+                responsavel: editingImprensa.responsavel || "",
+                telefone: editingImprensa.telefone || "",
+                email: editingImprensa.email || "",
+                endereco: editingImprensa.endereco || "",
+                website: editingImprensa.website || "",
+                observacoes: editingImprensa.observacoes || "",
+            });
+        } else {
+            setFormData({
+                nome: "",
+                tipo: "",
+                responsavel: "",
+                telefone: "",
+                email: "",
+                endereco: "",
+                website: "",
+                observacoes: "",
+            });
+        }
+    }, [editingImprensa, isOpen]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -44,16 +75,18 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit }: ImprensaMod
         setSaving(true);
         try {
             await onSubmit(formData);
-            setFormData({
-                nome: "",
-                tipo: "",
-                responsavel: "",
-                telefone: "",
-                email: "",
-                endereco: "",
-                website: "",
-                observacoes: "",
-            });
+            if (!isEditing) {
+                setFormData({
+                    nome: "",
+                    tipo: "",
+                    responsavel: "",
+                    telefone: "",
+                    email: "",
+                    endereco: "",
+                    website: "",
+                    observacoes: "",
+                });
+            }
             onClose();
         } catch (error) {
             console.error("Erro ao salvar:", error);
@@ -94,7 +127,7 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit }: ImprensaMod
                         <div className="flex items-center gap-2">
                             <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
                             <h2 className="text-lg font-semibold text-slate-800">
-                                Adicionar Veículo de Imprensa
+                                {isEditing ? "Editar Veículo de Imprensa" : "Adicionar Veículo de Imprensa"}
                             </h2>
                         </div>
                         <button
@@ -257,7 +290,7 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit }: ImprensaMod
                                     Salvando...
                                 </>
                             ) : (
-                                "Adicionar"
+                                isEditing ? "Salvar Alterações" : "Adicionar"
                             )}
                         </button>
                     </div>
