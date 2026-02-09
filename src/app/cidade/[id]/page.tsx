@@ -106,10 +106,14 @@ export default function CidadePage() {
                 </div>
 
                 {/* Info Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
                     <div className="bg-white rounded-lg border border-slate-200 p-4">
                         <p className="text-xs text-slate-500 uppercase">Eleitores</p>
                         <p className="text-xl font-bold text-slate-800 mt-1">{cidade.eleitores?.toLocaleString() || "—"}</p>
+                    </div>
+                    <div className="bg-white rounded-lg border border-slate-200 p-4">
+                        <p className="text-xs text-slate-500 uppercase">Votos Válidos</p>
+                        <p className="text-xl font-bold text-slate-800 mt-1">{cidade.votos_validos?.toLocaleString() || "—"}</p>
                     </div>
                     <div className="bg-white rounded-lg border border-slate-200 p-4">
                         <p className="text-xs text-slate-500 uppercase">Votos Prefeito</p>

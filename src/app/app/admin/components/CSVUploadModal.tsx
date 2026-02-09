@@ -41,6 +41,8 @@ const CSV_COLUMN_MAP: Record<string, keyof Cidade> = {
     // Total votos
     'total_votos': 'total_votos',
     'votos': 'total_votos',
+    // Votos válidos
+    'votos_validos': 'votos_validos',
     // Vice
     'vice_prefeito': 'vice_prefeito',
     'vice': 'vice_prefeito',
@@ -65,6 +67,7 @@ const FIELD_LABELS: Record<keyof Cidade, string> = {
     partido: 'Partido',
     status_prefeito: 'Status Prefeito',
     total_votos: 'Total Votos',
+    votos_validos: 'Votos Válidos',
     vice_prefeito: 'Vice-Prefeito',
     partido_vice: 'Partido Vice',
     status_vice: 'Status Vice',
@@ -158,7 +161,7 @@ export default function CSVUploadModal({ isOpen, onClose, onImport, existingCity
                 if (!value) return; // Ignora valores vazios após trim
 
                 // Converte campos numéricos
-                if (['eleitores', 'total_votos', 'apoio', 'nao_apoio'].includes(field)) {
+                if (['eleitores', 'total_votos', 'votos_validos', 'apoio', 'nao_apoio'].includes(field)) {
                     const cleanedValue = value.replace(/\D/g, '');
                     if (cleanedValue) {
                         const numValue = parseInt(cleanedValue, 10);
@@ -294,8 +297,8 @@ export default function CSVUploadModal({ isOpen, onClose, onImport, existingCity
     };
 
     const downloadTemplate = () => {
-        const headers = ['id', 'name', 'mesorregiao', 'prefeito', 'partido', 'vice_prefeito', 'partido_vice', 'eleitores', 'total_votos', 'status_prefeito', 'status_vice', 'apoio', 'nao_apoio'];
-        const exampleRow = ['4100103', 'Abatiá', 'Norte Pioneiro Paranaense', 'João Silva', 'PARTIDO', 'Maria Santos', 'PARTIDO2', '5000', '3500', 'Eleito', 'Eleito', '1', '0'];
+        const headers = ['id', 'name', 'mesorregiao', 'prefeito', 'partido', 'vice_prefeito', 'partido_vice', 'eleitores', 'votos_validos', 'total_votos', 'status_prefeito', 'status_vice', 'apoio', 'nao_apoio'];
+        const exampleRow = ['4100103', 'Abatiá', 'Norte Pioneiro Paranaense', 'João Silva', 'PARTIDO', 'Maria Santos', 'PARTIDO2', '5000', '4200', '3500', 'Eleito', 'Eleito', '1', '0'];
 
         const csvContent = [headers.join(';'), exampleRow.join(';')].join('\n');
         const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });

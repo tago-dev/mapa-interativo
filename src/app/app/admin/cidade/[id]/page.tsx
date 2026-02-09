@@ -37,6 +37,7 @@ export default function AdminCidadePage() {
         partido: "",
         status_prefeito: "",
         total_votos: "",
+        votos_validos: "",
         vice_prefeito: "",
         partido_vice: "",
         status_vice: "",
@@ -112,6 +113,7 @@ export default function AdminCidadePage() {
                     partido: finalData.partido || "",
                     status_prefeito: finalData.status_prefeito || "",
                     total_votos: finalData.total_votos?.toString() || "",
+                    votos_validos: finalData.votos_validos?.toString() || "",
                     vice_prefeito: finalData.vice_prefeito || "",
                     partido_vice: finalData.partido_vice || "",
                     status_vice: finalData.status_vice || "",
@@ -154,6 +156,7 @@ export default function AdminCidadePage() {
                 partido_vice: formData.partido_vice || undefined,
                 status_vice: formData.status_vice || undefined,
                 total_votos: formData.total_votos ? parseInt(formData.total_votos) : undefined,
+                votos_validos: formData.votos_validos ? parseInt(formData.votos_validos) : undefined,
                 eleitores: formData.eleitores ? parseInt(formData.eleitores) : undefined,
                 apoio: formData.apoio ? parseInt(formData.apoio) : undefined,
                 nao_apoio: formData.nao_apoio ? parseInt(formData.nao_apoio) : undefined,
@@ -502,13 +505,24 @@ export default function AdminCidadePage() {
                             <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
                             Dados Eleitorais
                         </h3>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                             <div>
                                 <label className="block text-xs font-medium text-slate-500 mb-1.5">Total de Eleitores</label>
                                 <input
                                     type="number"
                                     name="eleitores"
                                     value={formData.eleitores}
+                                    onChange={handleInputChange}
+                                    placeholder="0"
+                                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-slate-500 mb-1.5">Votos Válidos</label>
+                                <input
+                                    type="number"
+                                    name="votos_validos"
+                                    value={formData.votos_validos}
                                     onChange={handleInputChange}
                                     placeholder="0"
                                     className="w-full border border-slate-200 rounded-lg p-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"

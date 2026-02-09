@@ -9,6 +9,7 @@ import CSVUploadModal from "./components/CSVUploadModal";
 import CSVVereadoresModal from "./components/CSVVereadoresModal";
 import CSVParanaImportModal from "./components/CSVParanaImportModal";
 import CSVEleitoresImportModal from "./components/CSVEleitoresImportModal";
+import CSVVotosValidosImportModal from "./components/CSVVotosValidosImportModal";
 
 type GeoFeature = {
     id?: string | number;
@@ -35,6 +36,7 @@ export default function AdminDashboard() {
     const [isVereadoresModalOpen, setIsVereadoresModalOpen] = useState(false);
     const [isParanaModalOpen, setIsParanaModalOpen] = useState(false);
     const [isEleitoresModalOpen, setIsEleitoresModalOpen] = useState(false);
+    const [isVotosValidosModalOpen, setIsVotosValidosModalOpen] = useState(false);
 
     // Set de IDs de cidades existentes no banco
     const existingCityIds = useMemo(() => {
@@ -150,6 +152,17 @@ export default function AdminDashboard() {
         setDbCities(registered);
 
         alert(`✅ Total de eleitores atualizado para ${cities.length} cidades!`);
+    };
+
+    // Função para importar votos válidos
+    const handleVotosValidosImport = async (cities: Partial<Cidade>[]) => {
+        await bulkUpdateCities(cities);
+
+        // Recarrega os dados
+        const registered = await fetchAllCities();
+        setDbCities(registered);
+
+        alert(`✅ Votos válidos atualizados para ${cities.length} cidades!`);
     };
 
     // Função para importar TODAS as cidades do GeoJSON de uma vez
@@ -311,6 +324,15 @@ export default function AdminDashboard() {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
                                     Eleitores
+                                </button>
+                                <button
+                                    onClick={() => setIsVotosValidosModalOpen(true)}
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 transition-colors text-sm"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Votos Válidos
                                 </button>
                                 <button
                                     onClick={() => setIsCSVModalOpen(true)}
@@ -566,6 +588,14 @@ export default function AdminDashboard() {
                 onImport={handleEleitoresImport}
                 existingCities={dbCities.map(c => ({ id: String(c.id), name: c.name, prefeito: c.prefeito }))}
             /> */}
+
+            {/* Modal de Import Votos Válidos */}
+            <CSVVotosValidosImportModal
+                isOpen={isVotosValidosModalOpen}
+                onClose={() => setIsVotosValidosModalOpen(false)}
+                onImport={handleVotosValidosImport}
+                existingCities={dbCities.map(c => ({ id: String(c.id), name: c.name, prefeito: c.prefeito }))}
+            />
         </div>
     );
 }

@@ -7,6 +7,7 @@ export interface Cidade {
     partido?: string;
     status_prefeito?: string;
     total_votos?: number;
+    votos_validos?: number;
     vice_prefeito?: string;
     partido_vice?: string;
     status_vice?: string;
