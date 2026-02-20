@@ -13,6 +13,7 @@ import {
     deleteCooperativa,
     addEmpresario,
     deleteEmpresario,
+    updateEmpresario,
     addImprensa,
     deleteImprensa,
     updateImprensa
@@ -20,7 +21,7 @@ import {
 import CooperativaModal from "../../components/CooperativaModal";
 import EmpresarioModal from "../../components/EmpresarioModal";
 import ImprensaModal from "../../components/ImprensaModal";
-import { Imprensa } from "@/types/types";
+import { Empresario, Imprensa } from "@/types/types";
 
 export default function AdminCidadePage() {
     const params = useParams();
@@ -54,6 +55,7 @@ export default function AdminCidadePage() {
     const [showEmpresarioModal, setShowEmpresarioModal] = useState(false);
     const [showImprensaModal, setShowImprensaModal] = useState(false);
     const [editingImprensa, setEditingImprensa] = useState<Imprensa | null>(null);
+    const [editingEmpresario, setEditingEmpresario] = useState<Empresario | null>(null);
 
     const loadData = useCallback(async () => {
         if (!id) return;
@@ -255,22 +257,46 @@ export default function AdminCidadePage() {
     }) => {
         if (!cidade) return;
         try {
-            await addEmpresario({
-                cidade_id: cidade.id,
-                nome: data.nome.trim(),
-                responsavel: data.responsavel.trim() || undefined,
-                telefone: data.telefone.trim() || undefined,
-                email: data.email.trim() || undefined,
-                empresa: data.empresa.trim() || undefined,
-                segmento: data.segmento.trim() || undefined,
-                endereco: data.endereco.trim() || undefined,
-                observacoes: data.observacoes.trim() || undefined,
-            });
+            if (editingEmpresario) {
+                await updateEmpresario(editingEmpresario.id, {
+                    nome: data.nome.trim(),
+                    responsavel: data.responsavel.trim() || undefined,
+                    telefone: data.telefone.trim() || undefined,
+                    email: data.email.trim() || undefined,
+                    empresa: data.empresa.trim() || undefined,
+                    segmento: data.segmento.trim() || undefined,
+                    endereco: data.endereco.trim() || undefined,
+                    observacoes: data.observacoes.trim() || undefined,
+                });
+                setEditingEmpresario(null);
+            } else {
+                await addEmpresario({
+                    cidade_id: cidade.id,
+                    nome: data.nome.trim(),
+                    responsavel: data.responsavel.trim() || undefined,
+                    telefone: data.telefone.trim() || undefined,
+                    email: data.email.trim() || undefined,
+                    empresa: data.empresa.trim() || undefined,
+                    segmento: data.segmento.trim() || undefined,
+                    endereco: data.endereco.trim() || undefined,
+                    observacoes: data.observacoes.trim() || undefined,
+                });
+            }
             loadData();
         } catch (error) {
             console.error(error);
-            alert("Erro ao adicionar empresário");
+            alert(editingEmpresario ? "Erro ao atualizar empresário" : "Erro ao adicionar empresário");
         }
+    };
+
+    const handleEditEmpresario = (emp: Empresario) => {
+        setEditingEmpresario(emp);
+        setShowEmpresarioModal(true);
+    };
+
+    const handleCloseEmpresarioModal = () => {
+        setShowEmpresarioModal(false);
+        setEditingEmpresario(null);
     };
 
     const handleDeleteEmpresario = async (empId: string) => {
@@ -606,7 +632,7 @@ export default function AdminCidadePage() {
                             </span>
                         </div>
 
-                        <ul className="space-y-2 max-h-64 overflow-y-auto mb-4">
+                        <ul className="space-y-2 max-h-96 overflow-y-auto mb-4">
                             {cidade.vereadores?.length === 0 && (
                                 <li className="text-center text-slate-400 py-6 text-sm">
                                     Nenhum vereador cadastrado
@@ -622,7 +648,7 @@ export default function AdminCidadePage() {
                                     </div>
                                     <button
                                         onClick={() => handleDeleteVereador(ver.id)}
-                                        className="text-red-500 hover:text-red-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                        className="text-red-500 hover:text-red-600 text-xs"
                                     >
                                         Remover
                                     </button>
@@ -666,7 +692,7 @@ export default function AdminCidadePage() {
                             </span>
                         </div>
 
-                        <ul className="space-y-2 max-h-64 overflow-y-auto mb-4">
+                        <ul className="space-y-2 max-h-96 overflow-y-auto mb-4">
                             {cidade.cooperativas?.length === 0 && (
                                 <li className="text-center text-slate-400 py-6 text-sm">
                                     Nenhuma cooperativa cadastrada
@@ -685,7 +711,7 @@ export default function AdminCidadePage() {
                                     </div>
                                     <button
                                         onClick={() => handleDeleteCooperativa(coop.id)}
-                                        className="text-red-500 hover:text-red-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                        className="text-red-500 hover:text-red-600 text-xs"
                                     >
                                         Remover
                                     </button>
@@ -713,34 +739,65 @@ export default function AdminCidadePage() {
                             </span>
                         </div>
 
-                        <ul className="space-y-2 max-h-64 overflow-y-auto mb-4">
+                        {/* Tabela (desktop) */}
+                        <div className="hidden md:block overflow-x-auto max-h-96 overflow-y-auto mb-4">
+                            <table className="w-full text-sm text-left text-slate-700">
+                                <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200 sticky top-0">
+                                    <tr>
+                                        <th className="px-3 py-2.5 font-medium">Nome</th>
+                                        <th className="px-3 py-2.5 font-medium">Empresa</th>
+                                        <th className="px-3 py-2.5 font-medium">Segmento</th>
+                                        <th className="px-3 py-2.5 font-medium">Contato</th>
+                                        <th className="px-3 py-2.5 font-medium text-right">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {cidade.empresarios?.length === 0 && (
+                                        <tr>
+                                            <td colSpan={5} className="px-3 py-6 text-center text-slate-400">
+                                                Nenhum empresário cadastrado
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {cidade.empresarios?.map((emp) => (
+                                        <tr key={emp.id} className="border-b border-slate-100 hover:bg-slate-50">
+                                            <td className="px-3 py-2.5 font-medium text-slate-800">{emp.nome}</td>
+                                            <td className="px-3 py-2.5 text-slate-600">{emp.empresa || "—"}</td>
+                                            <td className="px-3 py-2.5">
+                                                {emp.segmento ? (
+                                                    <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded">{emp.segmento}</span>
+                                                ) : "—"}
+                                            </td>
+                                            <td className="px-3 py-2.5 text-slate-600">{emp.telefone || emp.email || "—"}</td>
+                                            <td className="px-3 py-2.5 text-right">
+                                                <button onClick={() => handleEditEmpresario(emp)} className="text-blue-500 hover:text-blue-600 text-xs mr-2">Editar</button>
+                                                <button onClick={() => handleDeleteEmpresario(emp.id)} className="text-red-500 hover:text-red-600 text-xs">Remover</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Lista (mobile) */}
+                        <ul className="md:hidden space-y-2 max-h-96 overflow-y-auto mb-4">
                             {cidade.empresarios?.length === 0 && (
                                 <li className="text-center text-slate-400 py-6 text-sm">
                                     Nenhum empresário cadastrado
                                 </li>
                             )}
                             {cidade.empresarios?.map((emp) => (
-                                <li key={emp.id} className="flex justify-between items-center bg-slate-50 p-3 rounded-lg group hover:bg-slate-100 transition-colors">
+                                <li key={emp.id} className="flex justify-between items-center bg-slate-50 p-3 rounded-lg hover:bg-slate-100">
                                     <div>
                                         <span className="text-slate-800 text-sm font-medium">{emp.nome}</span>
-                                        {emp.empresa && (
-                                            <span className="ml-2 text-slate-500 text-xs">({emp.empresa})</span>
-                                        )}
-                                        {emp.segmento && (
-                                            <span className="ml-1 text-xs text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                                                {emp.segmento}
-                                            </span>
-                                        )}
-                                        {emp.telefone && (
-                                            <span className="block text-slate-400 text-xs mt-0.5">{emp.telefone}</span>
-                                        )}
+                                        {emp.empresa && <span className="ml-2 text-slate-500 text-xs">({emp.empresa})</span>}
+                                        {emp.segmento && <span className="ml-1 text-xs text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">{emp.segmento}</span>}
+                                        {(emp.telefone || emp.email) && <span className="block text-slate-400 text-xs mt-0.5">{emp.telefone || emp.email}</span>}
                                     </div>
-                                    <button
-                                        onClick={() => handleDeleteEmpresario(emp.id)}
-                                        className="text-red-500 hover:text-red-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                        Remover
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <button onClick={() => handleEditEmpresario(emp)} className="text-blue-500 hover:text-blue-600 text-xs">Editar</button>
+                                        <button onClick={() => handleDeleteEmpresario(emp.id)} className="text-red-500 hover:text-red-600 text-xs">Remover</button>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
@@ -769,44 +826,67 @@ export default function AdminCidadePage() {
                         </span>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+                    {/* Tabela (desktop) */}
+                    <div className="hidden md:block overflow-x-auto max-h-96 overflow-y-auto mb-4">
+                        <table className="w-full text-sm text-left text-slate-700">
+                            <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200 sticky top-0">
+                                <tr>
+                                    <th className="px-3 py-2.5 font-medium">Nome</th>
+                                    <th className="px-3 py-2.5 font-medium">Tipo</th>
+                                    <th className="px-3 py-2.5 font-medium">Contato</th>
+                                    <th className="px-3 py-2.5 font-medium text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {cidade.imprensa?.length === 0 && (
+                                    <tr>
+                                        <td colSpan={4} className="px-3 py-6 text-center text-slate-400">
+                                            Nenhum veículo de imprensa cadastrado
+                                        </td>
+                                    </tr>
+                                )}
+                                {cidade.imprensa?.map((imp) => (
+                                    <tr key={imp.id} className="border-b border-slate-100 hover:bg-slate-50">
+                                        <td className="px-3 py-2.5 font-medium text-slate-800">{imp.nome}</td>
+                                        <td className="px-3 py-2.5">
+                                            {imp.tipo ? (
+                                                <span className="text-xs text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">{imp.tipo}</span>
+                                            ) : "—"}
+                                        </td>
+                                        <td className="px-3 py-2.5 text-slate-600">{imp.telefone || imp.email || imp.responsavel || "—"}</td>
+                                        <td className="px-3 py-2.5 text-right">
+                                            <button onClick={() => handleEditImprensa(imp)} className="text-blue-500 hover:text-blue-600 text-xs mr-2">Editar</button>
+                                            <button onClick={() => handleDeleteImprensa(imp.id)} className="text-red-500 hover:text-red-600 text-xs">Remover</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Cards (mobile) */}
+                    <div className="md:hidden grid grid-cols-1 gap-3 mb-4 max-h-96 overflow-y-auto">
                         {cidade.imprensa?.length === 0 && (
-                            <div className="col-span-full text-center text-slate-400 py-8 text-sm">
+                            <div className="text-center text-slate-400 py-8 text-sm">
                                 Nenhum veículo de imprensa cadastrado
                             </div>
                         )}
                         {cidade.imprensa?.map((imp) => (
-                            <div key={imp.id} className="bg-slate-50 p-3 rounded-lg group hover:bg-slate-100 transition-colors">
+                            <div key={imp.id} className="bg-slate-50 p-3 rounded-lg hover:bg-slate-100">
                                 <div className="flex justify-between items-start">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 flex-wrap">
                                             <span className="text-slate-800 text-sm font-medium">{imp.nome}</span>
                                             {imp.tipo && (
-                                                <span className="text-xs text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">
-                                                    {imp.tipo}
-                                                </span>
+                                                <span className="text-xs text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">{imp.tipo}</span>
                                             )}
                                         </div>
-                                        {imp.responsavel && (
-                                            <p className="text-slate-500 text-xs mt-1">{imp.responsavel}</p>
-                                        )}
-                                        {imp.telefone && (
-                                            <p className="text-slate-400 text-xs">{imp.telefone}</p>
-                                        )}
+                                        {imp.responsavel && <p className="text-slate-500 text-xs mt-1">{imp.responsavel}</p>}
+                                        {(imp.telefone || imp.email) && <p className="text-slate-400 text-xs">{imp.telefone || imp.email}</p>}
                                     </div>
-                                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
-                                        <button
-                                            onClick={() => handleEditImprensa(imp)}
-                                            className="text-blue-500 hover:text-blue-600 text-xs"
-                                        >
-                                            Editar
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteImprensa(imp.id)}
-                                            className="text-red-500 hover:text-red-600 text-xs"
-                                        >
-                                            Remover
-                                        </button>
+                                    <div className="flex items-center gap-2 ml-2">
+                                        <button onClick={() => handleEditImprensa(imp)} className="text-blue-500 hover:text-blue-600 text-xs">Editar</button>
+                                        <button onClick={() => handleDeleteImprensa(imp.id)} className="text-red-500 hover:text-red-600 text-xs">Remover</button>
                                     </div>
                                 </div>
                             </div>
@@ -833,8 +913,9 @@ export default function AdminCidadePage() {
             />
             <EmpresarioModal
                 isOpen={showEmpresarioModal}
-                onClose={() => setShowEmpresarioModal(false)}
+                onClose={handleCloseEmpresarioModal}
                 onSubmit={handleAddEmpresario}
+                editingEmpresario={editingEmpresario}
             />
             <ImprensaModal
                 isOpen={showImprensaModal}

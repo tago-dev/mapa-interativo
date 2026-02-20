@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Empresario } from "@/types/types";
 
 interface EmpresarioFormData {
     nome: string;
@@ -17,9 +18,10 @@ interface EmpresarioModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (data: EmpresarioFormData) => Promise<void>;
+    editingEmpresario?: Empresario | null;
 }
 
-export default function EmpresarioModal({ isOpen, onClose, onSubmit }: EmpresarioModalProps) {
+export default function EmpresarioModal({ isOpen, onClose, onSubmit, editingEmpresario }: EmpresarioModalProps) {
     const [formData, setFormData] = useState<EmpresarioFormData>({
         nome: "",
         responsavel: "",
@@ -31,6 +33,34 @@ export default function EmpresarioModal({ isOpen, onClose, onSubmit }: Empresari
         observacoes: "",
     });
     const [saving, setSaving] = useState(false);
+
+    const isEditing = !!editingEmpresario;
+
+    useEffect(() => {
+        if (editingEmpresario) {
+            setFormData({
+                nome: editingEmpresario.nome || "",
+                responsavel: editingEmpresario.responsavel || "",
+                telefone: editingEmpresario.telefone || "",
+                email: editingEmpresario.email || "",
+                empresa: editingEmpresario.empresa || "",
+                segmento: editingEmpresario.segmento || "",
+                endereco: editingEmpresario.endereco || "",
+                observacoes: editingEmpresario.observacoes || "",
+            });
+        } else {
+            setFormData({
+                nome: "",
+                responsavel: "",
+                telefone: "",
+                email: "",
+                empresa: "",
+                segmento: "",
+                endereco: "",
+                observacoes: "",
+            });
+        }
+    }, [editingEmpresario, isOpen]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -44,16 +74,18 @@ export default function EmpresarioModal({ isOpen, onClose, onSubmit }: Empresari
         setSaving(true);
         try {
             await onSubmit(formData);
-            setFormData({
-                nome: "",
-                responsavel: "",
-                telefone: "",
-                email: "",
-                empresa: "",
-                segmento: "",
-                endereco: "",
-                observacoes: "",
-            });
+            if (!isEditing) {
+                setFormData({
+                    nome: "",
+                    responsavel: "",
+                    telefone: "",
+                    email: "",
+                    empresa: "",
+                    segmento: "",
+                    endereco: "",
+                    observacoes: "",
+                });
+            }
             onClose();
         } catch (error) {
             console.error("Erro ao salvar:", error);
@@ -92,7 +124,7 @@ export default function EmpresarioModal({ isOpen, onClose, onSubmit }: Empresari
                 <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 rounded-t-2xl">
                     <div className="flex items-center justify-between">
                         <h2 className="text-lg font-semibold text-slate-800">
-                            Adicionar Empresário
+                            {isEditing ? "Editar Empresário" : "Adicionar Empresário"}
                         </h2>
                         <button
                             onClick={handleClose}
@@ -254,7 +286,7 @@ export default function EmpresarioModal({ isOpen, onClose, onSubmit }: Empresari
                                     Salvando...
                                 </>
                             ) : (
-                                "Adicionar"
+                                isEditing ? "Salvar Alterações" : "Adicionar"
                             )}
                         </button>
                     </div>
