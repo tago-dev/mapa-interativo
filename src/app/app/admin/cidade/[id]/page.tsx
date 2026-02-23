@@ -61,6 +61,23 @@ export default function AdminCidadePage() {
     const [cooperativaModalMode, setCooperativaModalMode] = useState<"create" | "edit" | "view">("create");
     const [imprensaModalMode, setImprensaModalMode] = useState<"create" | "edit" | "view">("create");
 
+    const getErrorMessage = (error: unknown, fallback: string) => {
+        if (typeof error === "object" && error !== null) {
+            const maybeMessage = "message" in error ? String(error.message) : "";
+            const maybeCode = "code" in error ? String(error.code) : "";
+
+            if (maybeCode === "42501") {
+                return "Sem permissão para gravar no Supabase (RLS). Ajuste as policies da tabela.";
+            }
+
+            if (maybeMessage) {
+                return maybeMessage;
+            }
+        }
+
+        return fallback;
+    };
+
     const loadData = useCallback(async () => {
         if (!id) return;
         setLoading(true);
@@ -246,7 +263,10 @@ export default function AdminCidadePage() {
             loadData();
         } catch (error) {
             console.error(error);
-            alert(editingCooperativa ? "Erro ao atualizar cooperativa" : "Erro ao adicionar cooperativa");
+            alert(getErrorMessage(
+                error,
+                editingCooperativa ? "Erro ao atualizar cooperativa" : "Erro ao adicionar cooperativa"
+            ));
         }
     };
 
@@ -319,7 +339,10 @@ export default function AdminCidadePage() {
             loadData();
         } catch (error) {
             console.error(error);
-            alert(editingEmpresario ? "Erro ao atualizar empresário" : "Erro ao adicionar empresário");
+            alert(getErrorMessage(
+                error,
+                editingEmpresario ? "Erro ao atualizar empresário" : "Erro ao adicionar empresário"
+            ));
         }
     };
 
@@ -386,7 +409,10 @@ export default function AdminCidadePage() {
             loadData();
         } catch (error) {
             console.error(error);
-            alert(editingImprensa ? "Erro ao atualizar imprensa" : "Erro ao adicionar imprensa");
+            alert(getErrorMessage(
+                error,
+                editingImprensa ? "Erro ao atualizar imprensa" : "Erro ao adicionar imprensa"
+            ));
         }
     };
 
