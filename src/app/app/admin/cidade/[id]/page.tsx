@@ -11,6 +11,7 @@ import {
     deleteVereador,
     addCooperativa,
     deleteCooperativa,
+    updateCooperativa,
     addEmpresario,
     deleteEmpresario,
     updateEmpresario,
@@ -21,7 +22,7 @@ import {
 import CooperativaModal from "../../components/CooperativaModal";
 import EmpresarioModal from "../../components/EmpresarioModal";
 import ImprensaModal from "../../components/ImprensaModal";
-import { Empresario, Imprensa } from "@/types/types";
+import { Cooperativa, Empresario, Imprensa } from "@/types/types";
 
 export default function AdminCidadePage() {
     const params = useParams();
@@ -56,6 +57,9 @@ export default function AdminCidadePage() {
     const [showImprensaModal, setShowImprensaModal] = useState(false);
     const [editingImprensa, setEditingImprensa] = useState<Imprensa | null>(null);
     const [editingEmpresario, setEditingEmpresario] = useState<Empresario | null>(null);
+    const [editingCooperativa, setEditingCooperativa] = useState<Cooperativa | null>(null);
+    const [cooperativaModalMode, setCooperativaModalMode] = useState<"create" | "edit" | "view">("create");
+    const [imprensaModalMode, setImprensaModalMode] = useState<"create" | "edit" | "view">("create");
 
     const loadData = useCallback(async () => {
         if (!id) return;
@@ -218,20 +222,50 @@ export default function AdminCidadePage() {
     }) => {
         if (!cidade) return;
         try {
-            await addCooperativa({
-                cidade_id: cidade.id,
-                nome: data.nome.trim(),
-                responsavel: data.responsavel.trim() || undefined,
-                telefone: data.telefone.trim() || undefined,
-                email: data.email.trim() || undefined,
-                endereco: data.endereco.trim() || undefined,
-                observacoes: data.observacoes.trim() || undefined,
-            });
+            if (editingCooperativa) {
+                await updateCooperativa(editingCooperativa.id, {
+                    nome: data.nome.trim(),
+                    responsavel: data.responsavel.trim() || undefined,
+                    telefone: data.telefone.trim() || undefined,
+                    email: data.email.trim() || undefined,
+                    endereco: data.endereco.trim() || undefined,
+                    observacoes: data.observacoes.trim() || undefined,
+                });
+                setEditingCooperativa(null);
+            } else {
+                await addCooperativa({
+                    cidade_id: cidade.id,
+                    nome: data.nome.trim(),
+                    responsavel: data.responsavel.trim() || undefined,
+                    telefone: data.telefone.trim() || undefined,
+                    email: data.email.trim() || undefined,
+                    endereco: data.endereco.trim() || undefined,
+                    observacoes: data.observacoes.trim() || undefined,
+                });
+            }
             loadData();
         } catch (error) {
             console.error(error);
-            alert("Erro ao adicionar cooperativa");
+            alert(editingCooperativa ? "Erro ao atualizar cooperativa" : "Erro ao adicionar cooperativa");
         }
+    };
+
+    const handleViewCooperativa = (coop: Cooperativa) => {
+        setEditingCooperativa(coop);
+        setCooperativaModalMode("view");
+        setShowCooperativaModal(true);
+    };
+
+    const handleEditCooperativa = (coop: Cooperativa) => {
+        setEditingCooperativa(coop);
+        setCooperativaModalMode("edit");
+        setShowCooperativaModal(true);
+    };
+
+    const handleCloseCooperativaModal = () => {
+        setShowCooperativaModal(false);
+        setEditingCooperativa(null);
+        setCooperativaModalMode("create");
     };
 
     const handleDeleteCooperativa = async (coopId: string) => {
@@ -358,12 +392,20 @@ export default function AdminCidadePage() {
 
     const handleEditImprensa = (imprensa: Imprensa) => {
         setEditingImprensa(imprensa);
+        setImprensaModalMode("edit");
+        setShowImprensaModal(true);
+    };
+
+    const handleViewImprensa = (imprensa: Imprensa) => {
+        setEditingImprensa(imprensa);
+        setImprensaModalMode("view");
         setShowImprensaModal(true);
     };
 
     const handleCloseImprensaModal = () => {
         setShowImprensaModal(false);
         setEditingImprensa(null);
+        setImprensaModalMode("create");
     };
 
     const handleDeleteImprensa = async (imprensaId: string) => {
@@ -709,19 +751,37 @@ export default function AdminCidadePage() {
                                             <span className="block text-slate-400 text-xs mt-0.5">{coop.telefone}</span>
                                         )}
                                     </div>
-                                    <button
-                                        onClick={() => handleDeleteCooperativa(coop.id)}
-                                        className="text-red-500 hover:text-red-600 text-xs"
-                                    >
-                                        Remover
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => handleViewCooperativa(coop)}
+                                            className="text-slate-500 hover:text-slate-700 text-xs"
+                                        >
+                                            Ver
+                                        </button>
+                                        <button
+                                            onClick={() => handleEditCooperativa(coop)}
+                                            className="text-blue-500 hover:text-blue-600 text-xs"
+                                        >
+                                            Editar
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteCooperativa(coop.id)}
+                                            className="text-red-500 hover:text-red-600 text-xs"
+                                        >
+                                            Remover
+                                        </button>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
 
                         <div className="border-t border-slate-100 pt-4">
                             <button
-                                onClick={() => setShowCooperativaModal(true)}
+                                onClick={() => {
+                                    setEditingCooperativa(null);
+                                    setCooperativaModalMode("create");
+                                    setShowCooperativaModal(true);
+                                }}
                                 className="w-full bg-slate-800 text-white py-2.5 rounded-lg hover:bg-slate-700 text-sm font-medium transition-all flex items-center justify-center gap-2"
                             >
                                 <span className="text-lg">+</span>
@@ -855,6 +915,7 @@ export default function AdminCidadePage() {
                                         </td>
                                         <td className="px-3 py-2.5 text-slate-600">{imp.telefone || imp.email || imp.responsavel || "—"}</td>
                                         <td className="px-3 py-2.5 text-right">
+                                            <button onClick={() => handleViewImprensa(imp)} className="text-slate-500 hover:text-slate-700 text-xs mr-2">Ver</button>
                                             <button onClick={() => handleEditImprensa(imp)} className="text-blue-500 hover:text-blue-600 text-xs mr-2">Editar</button>
                                             <button onClick={() => handleDeleteImprensa(imp.id)} className="text-red-500 hover:text-red-600 text-xs">Remover</button>
                                         </td>
@@ -885,6 +946,7 @@ export default function AdminCidadePage() {
                                         {(imp.telefone || imp.email) && <p className="text-slate-400 text-xs">{imp.telefone || imp.email}</p>}
                                     </div>
                                     <div className="flex items-center gap-2 ml-2">
+                                        <button onClick={() => handleViewImprensa(imp)} className="text-slate-500 hover:text-slate-700 text-xs">Ver</button>
                                         <button onClick={() => handleEditImprensa(imp)} className="text-blue-500 hover:text-blue-600 text-xs">Editar</button>
                                         <button onClick={() => handleDeleteImprensa(imp.id)} className="text-red-500 hover:text-red-600 text-xs">Remover</button>
                                     </div>
@@ -895,7 +957,11 @@ export default function AdminCidadePage() {
 
                     <div className="border-t border-slate-100 pt-4">
                         <button
-                            onClick={() => setShowImprensaModal(true)}
+                            onClick={() => {
+                                setEditingImprensa(null);
+                                setImprensaModalMode("create");
+                                setShowImprensaModal(true);
+                            }}
                             className="w-full sm:w-auto bg-orange-600 text-white py-2.5 px-6 rounded-lg hover:bg-orange-700 text-sm font-medium transition-all flex items-center justify-center gap-2"
                         >
                             <span className="text-lg">+</span>
@@ -908,8 +974,10 @@ export default function AdminCidadePage() {
             {/* Modais */}
             <CooperativaModal
                 isOpen={showCooperativaModal}
-                onClose={() => setShowCooperativaModal(false)}
+                onClose={handleCloseCooperativaModal}
                 onSubmit={handleAddCooperativa}
+                editingCooperativa={editingCooperativa}
+                initialMode={cooperativaModalMode}
             />
             <EmpresarioModal
                 isOpen={showEmpresarioModal}
@@ -922,6 +990,7 @@ export default function AdminCidadePage() {
                 onClose={handleCloseImprensaModal}
                 onSubmit={handleAddImprensa}
                 editingImprensa={editingImprensa}
+                initialMode={imprensaModalMode}
             />
         </div>
     );

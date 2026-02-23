@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { Cooperativa } from "@/types/types";
 
 interface CooperativaFormData {
     nome: string;
@@ -15,9 +16,17 @@ interface CooperativaModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (data: CooperativaFormData) => Promise<void>;
+    editingCooperativa?: Cooperativa | null;
+    initialMode?: "create" | "edit" | "view";
 }
 
-export default function CooperativaModal({ isOpen, onClose, onSubmit }: CooperativaModalProps) {
+export default function CooperativaModal({
+    isOpen,
+    onClose,
+    onSubmit,
+    editingCooperativa,
+    initialMode,
+}: CooperativaModalProps) {
     const [formData, setFormData] = useState<CooperativaFormData>({
         nome: "",
         responsavel: "",
@@ -27,19 +36,29 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
         observacoes: "",
     });
     const [saving, setSaving] = useState(false);
+    const [mode, setMode] = useState<"create" | "edit" | "view">(
+        initialMode ?? (editingCooperativa ? "edit" : "create")
+    );
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+    const isView = mode === "view";
+    const isEditing = mode === "edit";
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!formData.nome.trim()) return;
+    useEffect(() => {
+        setMode(initialMode ?? (editingCooperativa ? "edit" : "create"));
+    }, [editingCooperativa, initialMode, isOpen]);
 
-        setSaving(true);
-        try {
-            await onSubmit(formData);
+    // Preencher formulário quando estiver editando/visualizando
+    useEffect(() => {
+        if (editingCooperativa) {
+            setFormData({
+                nome: editingCooperativa.nome || "",
+                responsavel: editingCooperativa.responsavel || "",
+                telefone: editingCooperativa.telefone || "",
+                email: editingCooperativa.email || "",
+                endereco: editingCooperativa.endereco || "",
+                observacoes: editingCooperativa.observacoes || "",
+            });
+        } else {
             setFormData({
                 nome: "",
                 responsavel: "",
@@ -48,6 +67,22 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
                 endereco: "",
                 observacoes: "",
             });
+        }
+    }, [editingCooperativa, isOpen]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (isView) return;
+        if (!formData.nome.trim()) return;
+
+        setSaving(true);
+        try {
+            await onSubmit(formData);
             onClose();
         } catch (error) {
             console.error("Erro ao salvar:", error);
@@ -70,6 +105,13 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
 
     if (!isOpen) return null;
 
+    const title =
+        mode === "create"
+            ? "Adicionar Cooperativa"
+            : mode === "view"
+                ? "Visualizar Cooperativa"
+                : "Editar Cooperativa";
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
             {/* Backdrop */}
@@ -84,7 +126,7 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
                 <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 rounded-t-2xl">
                     <div className="flex items-center justify-between">
                         <h2 className="text-lg font-semibold text-slate-800">
-                            Adicionar Cooperativa
+                            {title}
                         </h2>
                         <button
                             onClick={handleClose}
@@ -109,7 +151,8 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
                             value={formData.nome}
                             onChange={handleChange}
                             placeholder="Ex: Cooperativa Agrícola Vale Verde"
-                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            disabled={isView}
+                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                             required
                         />
                     </div>
@@ -124,7 +167,8 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
                             value={formData.responsavel}
                             onChange={handleChange}
                             placeholder="Ex: João da Silva"
-                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            disabled={isView}
+                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                         />
                     </div>
 
@@ -139,7 +183,8 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
                                 value={formData.telefone}
                                 onChange={handleChange}
                                 placeholder="(00) 00000-0000"
-                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                disabled={isView}
+                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                             />
                         </div>
                         <div>
@@ -152,7 +197,8 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="contato@cooperativa.com"
-                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                disabled={isView}
+                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                             />
                         </div>
                     </div>
@@ -167,7 +213,8 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
                             value={formData.endereco}
                             onChange={handleChange}
                             placeholder="Rua, número, bairro"
-                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            disabled={isView}
+                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                         />
                     </div>
 
@@ -181,7 +228,8 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
                             onChange={handleChange}
                             placeholder="Informações adicionais..."
                             rows={3}
-                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none"
+                            disabled={isView}
+                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none disabled:bg-slate-50 disabled:text-slate-600"
                         />
                     </div>
 
@@ -192,25 +240,36 @@ export default function CooperativaModal({ isOpen, onClose, onSubmit }: Cooperat
                             onClick={handleClose}
                             className="flex-1 px-4 py-2.5 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
                         >
-                            Cancelar
+                            {isView ? "Fechar" : "Cancelar"}
                         </button>
-                        <button
-                            type="submit"
-                            disabled={saving || !formData.nome.trim()}
-                            className="flex-1 px-4 py-2.5 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                        >
-                            {saving ? (
-                                <>
-                                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                    </svg>
-                                    Salvando...
-                                </>
-                            ) : (
-                                "Adicionar"
-                            )}
-                        </button>
+                        {isView ? (
+                            <button
+                                type="button"
+                                onClick={() => setMode("edit")}
+                                disabled={!editingCooperativa}
+                                className="flex-1 px-4 py-2.5 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Editar
+                            </button>
+                        ) : (
+                            <button
+                                type="submit"
+                                disabled={saving || !formData.nome.trim()}
+                                className="flex-1 px-4 py-2.5 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            >
+                                {saving ? (
+                                    <>
+                                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                        </svg>
+                                        Salvando...
+                                    </>
+                                ) : (
+                                    isEditing ? "Salvar Alterações" : "Adicionar"
+                                )}
+                            </button>
+                        )}
                     </div>
                 </form>
             </div>

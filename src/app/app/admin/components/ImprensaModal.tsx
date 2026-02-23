@@ -19,9 +19,16 @@ interface ImprensaModalProps {
     onClose: () => void;
     onSubmit: (data: ImprensaFormData) => Promise<void>;
     editingImprensa?: Imprensa | null;
+    initialMode?: "create" | "edit" | "view";
 }
 
-export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImprensa }: ImprensaModalProps) {
+export default function ImprensaModal({
+    isOpen,
+    onClose,
+    onSubmit,
+    editingImprensa,
+    initialMode,
+}: ImprensaModalProps) {
     const [formData, setFormData] = useState<ImprensaFormData>({
         nome: "",
         tipo: "",
@@ -34,7 +41,15 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
     });
     const [saving, setSaving] = useState(false);
 
-    const isEditing = !!editingImprensa;
+    const [mode, setMode] = useState<"create" | "edit" | "view">(
+        initialMode ?? (editingImprensa ? "edit" : "create")
+    );
+    const isView = mode === "view";
+    const isEditing = mode === "edit";
+
+    useEffect(() => {
+        setMode(initialMode ?? (editingImprensa ? "edit" : "create"));
+    }, [editingImprensa, initialMode, isOpen]);
 
     // Preencher formulário quando estiver editando
     useEffect(() => {
@@ -70,6 +85,7 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isView) return;
         if (!formData.nome.trim()) return;
 
         setSaving(true);
@@ -111,6 +127,13 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
 
     if (!isOpen) return null;
 
+    const title =
+        mode === "create"
+            ? "Adicionar Veículo de Imprensa"
+            : mode === "view"
+                ? "Visualizar Veículo de Imprensa"
+                : "Editar Veículo de Imprensa";
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
             {/* Backdrop */}
@@ -127,7 +150,7 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                         <div className="flex items-center gap-2">
                             <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
                             <h2 className="text-lg font-semibold text-slate-800">
-                                {isEditing ? "Editar Veículo de Imprensa" : "Adicionar Veículo de Imprensa"}
+                                {title}
                             </h2>
                         </div>
                         <button
@@ -154,7 +177,8 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                                 value={formData.nome}
                                 onChange={handleChange}
                                 placeholder="Ex: Rádio Cidade FM"
-                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                                disabled={isView}
+                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                                 required
                             />
                         </div>
@@ -167,7 +191,8 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                                 name="tipo"
                                 value={formData.tipo}
                                 onChange={handleChange}
-                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white"
+                                disabled={isView}
+                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white disabled:bg-slate-50 disabled:text-slate-600"
                             >
                                 <option value="">Selecione...</option>
                                 <option value="Rádio">Rádio</option>
@@ -191,7 +216,8 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                                 value={formData.website}
                                 onChange={handleChange}
                                 placeholder="https://..."
-                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                                disabled={isView}
+                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                             />
                         </div>
                     </div>
@@ -206,7 +232,8 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                             value={formData.responsavel}
                             onChange={handleChange}
                             placeholder="Ex: João Silva (Editor)"
-                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                            disabled={isView}
+                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                         />
                     </div>
 
@@ -221,7 +248,8 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                                 value={formData.telefone}
                                 onChange={handleChange}
                                 placeholder="(00) 00000-0000"
-                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                                disabled={isView}
+                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                             />
                         </div>
                         <div>
@@ -234,7 +262,8 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="contato@veiculo.com"
-                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                                disabled={isView}
+                                className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                             />
                         </div>
                     </div>
@@ -249,7 +278,8 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                             value={formData.endereco}
                             onChange={handleChange}
                             placeholder="Rua, número, bairro"
-                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                            disabled={isView}
+                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all disabled:bg-slate-50 disabled:text-slate-600"
                         />
                     </div>
 
@@ -263,7 +293,8 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                             onChange={handleChange}
                             placeholder="Informações adicionais, horários de programação, alcance..."
                             rows={3}
-                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all resize-none"
+                            disabled={isView}
+                            className="w-full border border-slate-200 rounded-lg p-3 text-sm text-slate-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all resize-none disabled:bg-slate-50 disabled:text-slate-600"
                         />
                     </div>
 
@@ -274,25 +305,36 @@ export default function ImprensaModal({ isOpen, onClose, onSubmit, editingImpren
                             onClick={handleClose}
                             className="flex-1 px-4 py-2.5 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
                         >
-                            Cancelar
+                            {isView ? "Fechar" : "Cancelar"}
                         </button>
-                        <button
-                            type="submit"
-                            disabled={saving || !formData.nome.trim()}
-                            className="flex-1 px-4 py-2.5 bg-orange-600 text-white rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                        >
-                            {saving ? (
-                                <>
-                                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                    </svg>
-                                    Salvando...
-                                </>
-                            ) : (
-                                isEditing ? "Salvar Alterações" : "Adicionar"
-                            )}
-                        </button>
+                        {isView ? (
+                            <button
+                                type="button"
+                                onClick={() => setMode("edit")}
+                                disabled={!editingImprensa}
+                                className="flex-1 px-4 py-2.5 bg-orange-600 text-white rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Editar
+                            </button>
+                        ) : (
+                            <button
+                                type="submit"
+                                disabled={saving || !formData.nome.trim()}
+                                className="flex-1 px-4 py-2.5 bg-orange-600 text-white rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            >
+                                {saving ? (
+                                    <>
+                                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                        </svg>
+                                        Salvando...
+                                    </>
+                                ) : (
+                                    isEditing ? "Salvar Alterações" : "Adicionar"
+                                )}
+                            </button>
+                        )}
                     </div>
                 </form>
             </div>
