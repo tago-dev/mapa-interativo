@@ -73,6 +73,7 @@ const FIELD_LABELS: Record<keyof Cidade, string> = {
     status_vice: 'Status Vice',
     apoio: 'Apoio',
     nao_apoio: 'Não Apoio',
+    modo_contagem_vereadores: 'Modo Contagem Vereadores',
     created_at: 'Criado em',
     updated_at: 'Atualizado em',
 };
