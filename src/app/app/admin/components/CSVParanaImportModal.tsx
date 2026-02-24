@@ -199,6 +199,7 @@ export default function CSVParanaImportModal({
                         cidade_id: d.cidadeId!,
                         nome: v.nome,
                         partido: v.partido || undefined,
+                        posicao: "neutro",
                     });
                 });
             });

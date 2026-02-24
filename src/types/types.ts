@@ -13,15 +13,19 @@ export interface Cidade {
     status_vice?: string;
     apoio?: number;
     nao_apoio?: number;
+    modo_contagem_vereadores?: "auto" | "manual";
     created_at?: string;
     updated_at?: string;
 }
+
+export type VereadorPosicao = "aliado" | "neutro" | "oposicao";
 
 export interface Vereador {
     id: string;
     cidade_id: string;
     nome: string;
     partido?: string;
+    posicao?: VereadorPosicao;
     created_at?: string;
 }
 

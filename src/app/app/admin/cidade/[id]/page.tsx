@@ -8,7 +8,9 @@ import {
     fetchCityData,
     upsertCityData,
     addVereador,
+    updateVereador,
     deleteVereador,
+    countVereadoresByPosicao,
     addCooperativa,
     deleteCooperativa,
     updateCooperativa,
@@ -22,7 +24,7 @@ import {
 import CooperativaModal from "../../components/CooperativaModal";
 import EmpresarioModal from "../../components/EmpresarioModal";
 import ImprensaModal from "../../components/ImprensaModal";
-import { Cooperativa, Empresario, Imprensa } from "@/types/types";
+import { Cooperativa, Empresario, Imprensa, VereadorPosicao } from "@/types/types";
 
 export default function AdminCidadePage() {
     const params = useParams();
@@ -46,10 +48,15 @@ export default function AdminCidadePage() {
         eleitores: "",
         apoio: "",
         nao_apoio: "",
+        modo_contagem_vereadores: "manual" as "auto" | "manual",
     });
 
     // Estados para inputs de novos itens
-    const [newVereador, setNewVereador] = useState({ nome: "", partido: "" });
+    const [newVereador, setNewVereador] = useState<{ nome: string; partido: string; posicao: VereadorPosicao }>({
+        nome: "",
+        partido: "",
+        posicao: "neutro",
+    });
 
     // Estados para modais
     const [showCooperativaModal, setShowCooperativaModal] = useState(false);
@@ -70,6 +77,16 @@ export default function AdminCidadePage() {
                 return "Sem permissão para gravar no Supabase (RLS). Ajuste as policies da tabela.";
             }
 
+            if (maybeCode === "42703") {
+                if (maybeMessage.includes("modo_contagem_vereadores")) {
+                    return "Coluna não encontrada no banco. Verifique se a coluna 'modo_contagem_vereadores' foi criada na tabela 'cidades'.";
+                }
+                if (maybeMessage.includes("posicao")) {
+                    return "Coluna não encontrada no banco. Verifique se a coluna 'posicao' foi criada na tabela 'vereadores'.";
+                }
+                return "Coluna não encontrada no banco. Verifique se as migrações foram aplicadas corretamente.";
+            }
+
             if (maybeMessage) {
                 return maybeMessage;
             }
@@ -77,6 +94,30 @@ export default function AdminCidadePage() {
 
         return fallback;
     };
+
+    const countByPosicao = useCallback((posicoes: Array<{ posicao?: string | null }>) => {
+        let apoio = 0;
+        let naoApoio = 0;
+        let neutro = 0;
+
+        posicoes.forEach((item) => {
+            if (item.posicao === "aliado") apoio += 1;
+            else if (item.posicao === "oposicao") naoApoio += 1;
+            else neutro += 1;
+        });
+
+        return { apoio, naoApoio, neutro };
+    }, []);
+
+    const syncContagemAutomatica = useCallback(async (cidadeId: string) => {
+        const counts = await countVereadoresByPosicao(cidadeId);
+        await upsertCityData({
+            id: cidadeId,
+            apoio: counts.apoio,
+            nao_apoio: counts.nao_apoio,
+        });
+        return counts;
+    }, []);
 
     const loadData = useCallback(async () => {
         if (!id) return;
@@ -130,6 +171,11 @@ export default function AdminCidadePage() {
 
                 setCidade(finalData);
 
+                const modoContagem = (finalData.modo_contagem_vereadores || "manual") as "auto" | "manual";
+                const counts = countByPosicao(finalData.vereadores || []);
+                const apoioValue = modoContagem === "auto" ? counts.apoio : finalData.apoio;
+                const naoApoioValue = modoContagem === "auto" ? counts.naoApoio : finalData.nao_apoio;
+
                 // Preenche o formData com strings (para evitar problemas com controlled inputs)
                 setFormData({
                     prefeito: finalData.prefeito || "",
@@ -141,8 +187,9 @@ export default function AdminCidadePage() {
                     partido_vice: finalData.partido_vice || "",
                     status_vice: finalData.status_vice || "",
                     eleitores: finalData.eleitores?.toString() || "",
-                    apoio: finalData.apoio?.toString() || "",
-                    nao_apoio: finalData.nao_apoio?.toString() || "",
+                    apoio: apoioValue?.toString() || "",
+                    nao_apoio: naoApoioValue?.toString() || "",
+                    modo_contagem_vereadores: modoContagem,
                 });
                 setHasChanges(false);
             }
@@ -151,7 +198,7 @@ export default function AdminCidadePage() {
         } finally {
             setLoading(false);
         }
-    }, [id]);
+    }, [countByPosicao, id]);
 
     useEffect(() => {
         loadData();
@@ -181,8 +228,13 @@ export default function AdminCidadePage() {
                 total_votos: formData.total_votos ? parseInt(formData.total_votos) : undefined,
                 votos_validos: formData.votos_validos ? parseInt(formData.votos_validos) : undefined,
                 eleitores: formData.eleitores ? parseInt(formData.eleitores) : undefined,
-                apoio: formData.apoio ? parseInt(formData.apoio) : undefined,
-                nao_apoio: formData.nao_apoio ? parseInt(formData.nao_apoio) : undefined,
+                apoio: formData.modo_contagem_vereadores === "manual"
+                    ? (formData.apoio ? parseInt(formData.apoio) : undefined)
+                    : (cidade.vereadores ? countByPosicao(cidade.vereadores).apoio : 0),
+                nao_apoio: formData.modo_contagem_vereadores === "manual"
+                    ? (formData.nao_apoio ? parseInt(formData.nao_apoio) : undefined)
+                    : (cidade.vereadores ? countByPosicao(cidade.vereadores).naoApoio : 0),
+                modo_contagem_vereadores: formData.modo_contagem_vereadores,
             };
 
             await upsertCityData(cityUpdate);
@@ -222,9 +274,13 @@ export default function AdminCidadePage() {
             await addVereador({
                 cidade_id: cidade.id,
                 nome: newVereador.nome.trim(),
-                partido: newVereador.partido.trim() || undefined
+                partido: newVereador.partido.trim() || undefined,
+                posicao: newVereador.posicao,
             });
-            setNewVereador({ nome: "", partido: "" });
+            setNewVereador({ nome: "", partido: "", posicao: "neutro" });
+            if (formData.modo_contagem_vereadores === "auto") {
+                await syncContagemAutomatica(cidade.id);
+            }
             loadData();
         } catch (error) {
             console.error(error);
@@ -236,9 +292,72 @@ export default function AdminCidadePage() {
         if (!confirm("Tem certeza que deseja remover este vereador?")) return;
         try {
             await deleteVereador(vereadorId);
+            if (cidade && formData.modo_contagem_vereadores === "auto") {
+                await syncContagemAutomatica(cidade.id);
+            }
             loadData();
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    const handleUpdateVereadorPosicao = async (vereadorId: string, posicao: VereadorPosicao) => {
+        if (!cidade) return;
+        try {
+            await updateVereador(vereadorId, { posicao });
+            if (formData.modo_contagem_vereadores === "auto") {
+                await syncContagemAutomatica(cidade.id);
+            }
+            loadData();
+        } catch (error) {
+            if (typeof error === "object" && error !== null) {
+                console.error("Erro ao atualizar posição do vereador:", {
+                    message: "message" in error ? String(error.message) : undefined,
+                    code: "code" in error ? String(error.code) : undefined,
+                    details: "details" in error ? String(error.details) : undefined,
+                    hint: "hint" in error ? String(error.hint) : undefined,
+                    raw: error,
+                });
+            } else {
+                console.error("Erro ao atualizar posição do vereador:", error);
+            }
+            alert(getErrorMessage(error, "Erro ao atualizar posição do vereador"));
+        }
+    };
+
+    const handleChangeModoContagem = async (modo: "auto" | "manual") => {
+        if (!cidade) return;
+
+        if (modo === formData.modo_contagem_vereadores) return;
+
+        setFormData((prev) => ({ ...prev, modo_contagem_vereadores: modo }));
+        setHasChanges(true);
+
+        if (modo === "auto") {
+            try {
+                const counts = await syncContagemAutomatica(cidade.id);
+                setFormData((prev) => ({
+                    ...prev,
+                    modo_contagem_vereadores: "auto",
+                    apoio: String(counts.apoio),
+                    nao_apoio: String(counts.nao_apoio),
+                }));
+                setHasChanges(false);
+                loadData();
+            } catch (error) {
+                if (typeof error === "object" && error !== null) {
+                    console.error("Erro ao ativar modo automático:", {
+                        message: "message" in error ? String(error.message) : undefined,
+                        code: "code" in error ? String(error.code) : undefined,
+                        details: "details" in error ? String(error.details) : undefined,
+                        hint: "hint" in error ? String(error.hint) : undefined,
+                        raw: error,
+                    });
+                } else {
+                    console.error("Erro ao ativar modo automático:", error);
+                }
+                alert(getErrorMessage(error, "Erro ao ativar modo automático"));
+            }
         }
     };
 
@@ -466,6 +585,12 @@ export default function AdminCidadePage() {
         { value: "oposição", label: "Oposição" },
     ];
 
+    const vereadorPosicaoOptions: Array<{ value: VereadorPosicao; label: string }> = [
+        { value: "aliado", label: "Aliado" },
+        { value: "neutro", label: "Neutro" },
+        { value: "oposicao", label: "Oposição" },
+    ];
+
     if (loading) return (
         <div className="flex flex-col items-center justify-center min-h-[60vh]">
             <div className="w-8 h-8 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin"></div>
@@ -609,10 +734,35 @@ export default function AdminCidadePage() {
 
                     {/* Dados Eleitorais */}
                     <div className="mb-8">
-                        <h3 className="text-sm font-medium text-slate-600 mb-4 flex items-center gap-2">
-                            <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                            Dados Eleitorais
-                        </h3>
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                            <h3 className="text-sm font-medium text-slate-600 flex items-center gap-2">
+                                <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                                Dados Eleitorais
+                            </h3>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-slate-500">Contagem por vereadores:</span>
+                                <button
+                                    type="button"
+                                    onClick={() => handleChangeModoContagem("auto")}
+                                    className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors ${formData.modo_contagem_vereadores === "auto"
+                                        ? "bg-emerald-50 border-emerald-300 text-emerald-700"
+                                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                                        }`}
+                                >
+                                    Automática
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleChangeModoContagem("manual")}
+                                    className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors ${formData.modo_contagem_vereadores === "manual"
+                                        ? "bg-blue-50 border-blue-300 text-blue-700"
+                                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                                        }`}
+                                >
+                                    Manual
+                                </button>
+                            </div>
+                        </div>
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                             <div>
                                 <label className="block text-xs font-medium text-slate-500 mb-1.5">Total de Eleitores</label>
@@ -655,7 +805,8 @@ export default function AdminCidadePage() {
                                     value={formData.apoio}
                                     onChange={handleInputChange}
                                     placeholder="0"
-                                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    disabled={formData.modo_contagem_vereadores === "auto"}
+                                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:bg-slate-100 disabled:text-slate-500"
                                 />
                             </div>
                             <div>
@@ -666,10 +817,16 @@ export default function AdminCidadePage() {
                                     value={formData.nao_apoio}
                                     onChange={handleInputChange}
                                     placeholder="0"
-                                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    disabled={formData.modo_contagem_vereadores === "auto"}
+                                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:bg-slate-100 disabled:text-slate-500"
                                 />
                             </div>
                         </div>
+                        {formData.modo_contagem_vereadores === "auto" && (
+                            <p className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md px-2.5 py-1.5 mt-3">
+                                Modo automático ativo: apoio/oposição são calculados com base na posição dos vereadores.
+                            </p>
+                        )}
                     </div>
 
                     {/* Botão Salvar */}
@@ -721,45 +878,76 @@ export default function AdminCidadePage() {
                                 </li>
                             )}
                             {cidade.vereadores?.map((ver) => (
-                                <li key={ver.id} className="flex justify-between items-center bg-slate-50 p-3 rounded-lg group hover:bg-slate-100 transition-colors">
-                                    <div>
-                                        <span className="text-slate-800 text-sm font-medium">{ver.nome}</span>
-                                        {ver.partido && (
-                                            <span className="ml-2 text-slate-500 text-xs">({ver.partido})</span>
-                                        )}
+                                <li key={ver.id} className="bg-slate-50 p-3 rounded-lg group hover:bg-slate-100 transition-colors">
+                                    <div className="flex justify-between items-start gap-2">
+                                        <div>
+                                            <span className="text-slate-800 text-sm font-medium">{ver.nome}</span>
+                                            {ver.partido && (
+                                                <span className="ml-2 text-slate-500 text-xs">({ver.partido})</span>
+                                            )}
+                                        </div>
+                                        <button
+                                            onClick={() => handleDeleteVereador(ver.id)}
+                                            className="text-red-500 hover:text-red-600 text-xs"
+                                        >
+                                            Remover
+                                        </button>
                                     </div>
-                                    <button
-                                        onClick={() => handleDeleteVereador(ver.id)}
-                                        className="text-red-500 hover:text-red-600 text-xs"
-                                    >
-                                        Remover
-                                    </button>
+                                    <div className="mt-2">
+                                        <select
+                                            value={(ver.posicao as VereadorPosicao) || "neutro"}
+                                            onChange={(e) => handleUpdateVereadorPosicao(ver.id, e.target.value as VereadorPosicao)}
+                                            className="w-full border border-slate-200 rounded-md px-2 py-1.5 text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                                        >
+                                            {vereadorPosicaoOptions.map((opt) => (
+                                                <option key={opt.value} value={opt.value}>
+                                                    Posição: {opt.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
 
                         <div className="border-t border-slate-100 pt-4">
-                            <div className="flex gap-2">
+                            <div className="grid grid-cols-12 gap-2 items-center">
                                 <input
                                     placeholder="Nome"
                                     value={newVereador.nome}
                                     onChange={(e) => setNewVereador({ ...newVereador, nome: e.target.value })}
                                     onKeyDown={(e) => e.key === "Enter" && handleAddVereador()}
-                                    className="flex-1 border border-slate-200 p-2 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                    className="col-span-5 min-w-0 border border-slate-200 p-2 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                                 />
                                 <input
                                     placeholder="Partido"
                                     value={newVereador.partido}
                                     onChange={(e) => setNewVereador({ ...newVereador, partido: e.target.value })}
                                     onKeyDown={(e) => e.key === "Enter" && handleAddVereador()}
-                                    className="w-20 border border-slate-200 p-2 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                    className="col-span-3 min-w-0 border border-slate-200 p-2 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                                 />
+                                <select
+                                    value={newVereador.posicao}
+                                    onChange={(e) => setNewVereador({ ...newVereador, posicao: e.target.value as VereadorPosicao })}
+                                    className="col-span-3 min-w-0 border border-slate-200 p-2 rounded-lg text-xs text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
+                                >
+                                    {vereadorPosicaoOptions.map((opt) => (
+                                        <option key={opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </option>
+                                    ))}
+                                </select>
                                 <button
+                                    type="button"
                                     onClick={handleAddVereador}
                                     disabled={!newVereador.nome.trim()}
-                                    className="bg-slate-800 text-white px-3 rounded-lg hover:bg-slate-700 text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="col-span-1 h-10 w-full min-w-0 inline-flex items-center justify-center bg-slate-800 text-white rounded-lg hover:bg-slate-700 text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    aria-label="Adicionar vereador"
+                                    title="Adicionar vereador"
                                 >
-                                    +
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                    </svg>
                                 </button>
                             </div>
                         </div>

@@ -7,6 +7,7 @@ interface VereadorCSV {
     cidade_id: string;
     nome: string;
     partido?: string;
+    posicao?: "aliado" | "neutro" | "oposicao";
 }
 
 interface CSVVereadoresModalProps {
@@ -34,6 +35,23 @@ const CSV_COLUMN_MAP: Record<string, keyof VereadorCSV> = {
     'partido': 'partido',
     'sigla_partido': 'partido',
     'sigla': 'partido',
+    // Posição
+    'posicao': 'posicao',
+    'posição': 'posicao',
+    'status': 'posicao',
+    'alinhamento': 'posicao',
+};
+
+const normalizePosicao = (raw: string): "aliado" | "neutro" | "oposicao" => {
+    const value = raw
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    if (value === "aliado") return "aliado";
+    if (value === "oposicao") return "oposicao";
+    return "neutro";
 };
 
 export default function CSVVereadoresModal({ isOpen, onClose, onImport }: CSVVereadoresModalProps) {
@@ -108,7 +126,11 @@ export default function CSVVereadoresModal({ isOpen, onClose, onImport }: CSVVer
 
                 if (!value) return;
 
-                vereador[field] = value;
+                if (field === "posicao") {
+                    vereador[field] = normalizePosicao(value);
+                } else {
+                    vereador[field] = value;
+                }
             }
         });
 
@@ -237,11 +259,11 @@ export default function CSVVereadoresModal({ isOpen, onClose, onImport }: CSVVer
     };
 
     const downloadTemplate = () => {
-        const headers = ['cidade_id', 'nome', 'partido'];
+        const headers = ['cidade_id', 'nome', 'partido', 'posicao'];
         const exampleRows = [
-            ['4100103', 'João Silva', 'PSD'],
-            ['4100103', 'Maria Santos', 'MDB'],
-            ['4100202', 'Pedro Oliveira', 'PP'],
+            ['4100103', 'João Silva', 'PSD', 'aliado'],
+            ['4100103', 'Maria Santos', 'MDB', 'neutro'],
+            ['4100202', 'Pedro Oliveira', 'PP', 'oposicao'],
         ];
 
         const csvContent = [headers.join(';'), ...exampleRows.map(r => r.join(';'))].join('\n');
@@ -396,6 +418,11 @@ export default function CSVVereadoresModal({ isOpen, onClose, onImport }: CSVVer
                                         <code className="px-2 py-0.5 bg-slate-100 rounded text-xs">partido</code>
                                         <span className="text-slate-400">→</span>
                                         <span>Partido (opcional)</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-slate-600">
+                                        <code className="px-2 py-0.5 bg-slate-100 rounded text-xs">posicao</code>
+                                        <span className="text-slate-400">→</span>
+                                        <span>aliado/neutro/oposicao (opcional)</span>
                                     </div>
                                 </div>
                             </div>

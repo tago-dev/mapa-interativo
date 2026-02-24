@@ -1,5 +1,5 @@
 import { createClient } from './client';
-import { Cidade, CidadeCompleta, Vereador, Cooperativa, Empresario, Imprensa } from '@/types/types';
+import { Cidade, CidadeCompleta, Vereador, Cooperativa, Empresario, Imprensa, VereadorPosicao } from '@/types/types';
 
 // Helper para obter cliente Supabase
 const getSupabase = () => createClient();
@@ -234,6 +234,30 @@ export async function updateVereador(id: string, data: Partial<Vereador>) {
         .eq('id', id);
 
     if (error) throw error;
+}
+
+export async function countVereadoresByPosicao(cidadeId: string): Promise<{ apoio: number; nao_apoio: number; neutro: number }> {
+    const supabase = getSupabase();
+
+    const { data, error } = await supabase
+        .from("vereadores")
+        .select("posicao")
+        .eq("cidade_id", cidadeId);
+
+    if (error) throw error;
+
+    let apoio = 0;
+    let nao_apoio = 0;
+    let neutro = 0;
+
+    (data || []).forEach((item) => {
+        const posicao = item.posicao as VereadorPosicao | null;
+        if (posicao === "aliado") apoio += 1;
+        else if (posicao === "oposicao") nao_apoio += 1;
+        else neutro += 1;
+    });
+
+    return { apoio, nao_apoio, neutro };
 }
 
 export async function deleteVereador(id: string) {

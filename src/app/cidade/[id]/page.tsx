@@ -131,6 +131,36 @@ export default function CidadePage() {
         return { nameColorClass, statusColorClass };
     };
 
+    const getVereadorPosicaoStyle = (statusValue?: string) => {
+        const normalizedStatus = (statusValue || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim()
+            .toLowerCase();
+
+        if (normalizedStatus === "aliado") {
+            return {
+                rowClass: "bg-green-50/60 border border-green-100",
+                badgeClass: "text-green-700 bg-green-100",
+                label: "Aliado",
+            };
+        }
+
+        if (normalizedStatus === "oposicao") {
+            return {
+                rowClass: "bg-red-50/60 border border-red-100",
+                badgeClass: "text-red-700 bg-red-100",
+                label: "Oposição",
+            };
+        }
+
+        return {
+            rowClass: "bg-amber-50/60 border border-amber-100",
+            badgeClass: "text-amber-700 bg-amber-100",
+            label: "Neutro",
+        };
+    };
+
     const prefeitoStatus = (cidade.status_prefeito || "")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
@@ -274,9 +304,19 @@ export default function CidadePage() {
 
                         <div className="max-h-64 overflow-y-auto space-y-2">
                             {cidade.vereadores?.map((ver, idx) => (
-                                <div key={ver.id || idx} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0">
+                                <div
+                                    key={ver.id || idx}
+                                    className={`flex justify-between items-center py-2 px-2 rounded-md ${getVereadorPosicaoStyle(ver.posicao).rowClass}`}
+                                >
                                     <span className="text-sm text-slate-700">{ver.nome}</span>
-                                    <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded">{ver.partido}</span>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${getVereadorPosicaoStyle(ver.posicao).badgeClass}`}>
+                                            {getVereadorPosicaoStyle(ver.posicao).label}
+                                        </span>
+                                        <span className="text-xs font-medium text-slate-500 bg-white px-2 py-1 rounded border border-slate-200">
+                                            {ver.partido || "—"}
+                                        </span>
+                                    </div>
                                 </div>
                             ))}
                             {(!cidade.vereadores || cidade.vereadores.length === 0) && (
