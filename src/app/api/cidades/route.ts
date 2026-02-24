@@ -7,7 +7,7 @@ export async function GET() {
         
         const { data, error } = await supabase
             .from('cidades')
-            .select('id, status_prefeito');
+            .select('id, name, status_prefeito, status_vice');
 
         if (error) {
             console.error('Erro ao buscar cidades:', error);

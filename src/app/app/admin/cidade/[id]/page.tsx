@@ -194,8 +194,22 @@ export default function AdminCidadePage() {
                 setSaveSuccess(false);
             }, 2000);
         } catch (error) {
-            console.error("Erro ao salvar:", error);
-            alert("Erro ao salvar dados. Verifique o console para mais detalhes.");
+            if (typeof error === "object" && error !== null) {
+                console.error("Erro ao salvar (detalhado):", {
+                    message: "message" in error ? String(error.message) : undefined,
+                    code: "code" in error ? String(error.code) : undefined,
+                    details: "details" in error ? String(error.details) : undefined,
+                    hint: "hint" in error ? String(error.hint) : undefined,
+                    raw: error
+                });
+            } else {
+                console.error("Erro ao salvar:", error);
+            }
+
+            alert(getErrorMessage(
+                error,
+                "Erro ao salvar dados da cidade."
+            ));
         } finally {
             setSaving(false);
         }
@@ -535,7 +549,7 @@ export default function AdminCidadePage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-slate-500 mb-1.5">Status</label>
+                                <label className="block text-xs font-medium text-slate-500 mb-1.5">Status Prefeito</label>
                                 <select
                                     name="status_prefeito"
                                     value={formData.status_prefeito}
@@ -578,7 +592,7 @@ export default function AdminCidadePage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-slate-500 mb-1.5">Status</label>
+                                <label className="block text-xs font-medium text-slate-500 mb-1.5">Status Vice</label>
                                 <select
                                     name="status_vice"
                                     value={formData.status_vice}

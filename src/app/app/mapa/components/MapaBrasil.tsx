@@ -7,7 +7,9 @@ import "react-tooltip/dist/react-tooltip.css";
 
 type CidadeStatus = {
     id: string;
+    name?: string | null;
     status_prefeito: string | null;
+    status_vice?: string | null;
 };
 
 type GeoFeatureProps = {
@@ -51,6 +53,20 @@ const STATUS_COLORS = {
     },
 };
 
+const normalizeStatus = (status: string) =>
+    status
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+
+const normalizeCityKey = (value: string | number) =>
+    String(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+
 export default function MapaBrasil() {
     const router = useRouter();
     const [geoData, setGeoData] = useState<Record<string, unknown> | null>(null);
@@ -61,20 +77,33 @@ export default function MapaBrasil() {
     const statusMap = useMemo(() => {
         const map = new Map<string, string>();
         cidadesData.forEach((cidade) => {
-            if (cidade.id && cidade.status_prefeito) {
-                map.set(cidade.id, cidade.status_prefeito.toLowerCase());
+            const sourceStatus = cidade.status_prefeito || cidade.status_vice;
+            if (!sourceStatus) return;
+
+            const normalizedStatus = normalizeStatus(sourceStatus);
+
+            if (cidade.id) {
+                map.set(normalizeCityKey(cidade.id), normalizedStatus);
+            }
+
+            if (cidade.name) {
+                map.set(normalizeCityKey(cidade.name), normalizedStatus);
             }
         });
         return map;
     }, [cidadesData]);
 
     // Função para obter a cor baseada no status
-    const getStatusColor = (cityId: string | number | undefined) => {
-        if (!cityId) return STATUS_COLORS.default;
-        const status = statusMap.get(String(cityId));
+    const getStatusColor = (geo: GeoFeature) => {
+        const idKey = geo.properties.id || geo.id;
+        const nameKey = geo.properties.name;
+        const status =
+            (idKey ? statusMap.get(normalizeCityKey(idKey)) : undefined) ||
+            (nameKey ? statusMap.get(normalizeCityKey(nameKey)) : undefined);
+
         if (status === "aliado") return STATUS_COLORS.aliado;
         if (status === "neutro") return STATUS_COLORS.neutro;
-        if (status === "oposição") return STATUS_COLORS.oposição;
+        if (status === "oposicao") return STATUS_COLORS.oposição;
         return STATUS_COLORS.default;
     };
 
@@ -116,9 +145,9 @@ export default function MapaBrasil() {
     }
 
     return (
-        <div className="flex h-full w-full overflow-hidden">
-            <div className="w-full h-full relative bg-slate-50">
-                <div className="absolute top-4 left-4 z-10">
+        <div className="relative flex h-full min-h-0 w-full overflow-hidden">
+            <div className="w-full h-full min-h-0 relative bg-[radial-gradient(circle_at_35%_25%,#3b82f6_0%,#1d4ed8_45%,#1e3a8a_100%)]">
+                <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 max-w-[calc(100%-1.5rem)] sm:max-w-none">
                     <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm px-4 py-2 border border-slate-200">
                         <h2 className="text-base font-semibold text-slate-800">Paraná</h2>
                         <p className="text-xs text-slate-500">Clique em uma cidade</p>
@@ -126,7 +155,7 @@ export default function MapaBrasil() {
                 </div>
 
                 {hoveredCity && (
-                    <div className="absolute top-4 right-4 z-10">
+                    <div className="absolute top-4 right-4 z-10 hidden md:block">
                         <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm px-4 py-2 border border-slate-200">
                             <p className="text-xs text-slate-500">Selecionado</p>
                             <p className="font-semibold text-slate-800">{hoveredCity}</p>
@@ -138,14 +167,14 @@ export default function MapaBrasil() {
                     projection="geoMercator"
                     projectionConfig={{ center: [-51, -25], scale: 4000 }}
                     className="w-full h-full"
+                    style={{ width: "100%", height: "100%" }}
                 >
                     <ZoomableGroup center={[-51, -25]} zoom={1}>
                         {geoData && (
                             <Geographies geography={geoData}>
                                 {({ geographies }: { geographies: GeoFeature[] }) =>
                                     geographies.map((geo) => {
-                                        const cityId = geo.properties.id || geo.id;
-                                        const colors = getStatusColor(cityId);
+                                        const colors = getStatusColor(geo);
 
                                         return (
                                             <Geography
@@ -186,14 +215,14 @@ export default function MapaBrasil() {
                     </ZoomableGroup>
                 </ComposableMap>
 
-                <div className="absolute bottom-4 right-4 z-10">
+                <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-10 hidden sm:block">
                     <div className="bg-white/95 backdrop-blur-sm px-3 py-2 rounded-lg shadow-sm border border-slate-200">
                         <span className="text-xs text-slate-500">Scroll para zoom • Arraste para mover</span>
                     </div>
                 </div>
 
                 {/* Legenda */}
-                <div className="absolute bottom-4 left-4 z-10">
+                <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 max-w-[calc(100%-1.5rem)] sm:max-w-none">
                     <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm px-4 py-3 border border-slate-200">
                         <p className="text-xs font-medium text-slate-600 mb-2">Status Político</p>
                         <div className="flex flex-col gap-2">
@@ -219,7 +248,7 @@ export default function MapaBrasil() {
 
                 <Tooltip
                     id="map-tooltip"
-                    className="!bg-slate-800 !text-white !rounded-lg !px-3 !py-2 !text-sm !font-medium !shadow-xl"
+                    className="bg-slate-800! text-white! rounded-lg! px-3! py-2! text-sm! font-medium! shadow-xl!"
                 />
             </div>
         </div>
